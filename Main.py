@@ -1,4 +1,4 @@
-# Main.py
+# main.py
 # Written by: Sofia Perez de Tudela
 # 
 # This class is what's called to get the TMGE started
@@ -6,7 +6,7 @@
 # in run()
 
 def login():
-    pass
+    print("Welcome to the TMGE: Please sign in here")
 
 #Maybe we'll have a GUI here
 def display_games():
