@@ -8,10 +8,10 @@
 class Player():
 
     # Initialize with username, and a score of 0
-    def __init__(self, name):
+    def __init__(self, name : str):
         self.username = name
         self.score = 0
 
     # Increase or decrease the score
-    def add_to_score(self, num):
+    def add_to_score(self, num : int) -> None:
         self.score += num

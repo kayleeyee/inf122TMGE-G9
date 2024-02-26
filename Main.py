@@ -5,8 +5,17 @@
 # Has some command line displays and will call other classes
 # in run()
 
+import player
+
 def login():
-    print("Welcome to the TMGE: Please sign in here")
+    print('Welcome to the TMGE')
+    print('Player 1, enter your name here: \n   > ', end = '')
+    name1 = input()
+    print('Player 2, enter your name here: \n   > ', end = '')
+    name2 = input()
+
+    return [player.Player(name1), player.Player(name2)]
+
 
 #Maybe we'll have a GUI here
 def display_games():
