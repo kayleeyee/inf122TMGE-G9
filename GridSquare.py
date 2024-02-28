@@ -7,8 +7,8 @@ class GridSquare:
     def __init__(self, x, y) -> None:
         self.location = [x,y]
 
-    def removePiece():
-        piece = None
+    def removePiece(self):
+        self.piece = None
 
-    def changePiece(piece_to_change):
-        piece = piece_to_change
+    def changePiece(self, piece_to_change):
+        self.piece = piece_to_change

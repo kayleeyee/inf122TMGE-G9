@@ -8,4 +8,3 @@ class Color(Enum):
     Green = "Green"
     Yellow = "Yellow"
     Orange = "Orange" 
-    Red =  "Red"
