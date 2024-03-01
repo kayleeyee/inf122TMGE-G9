@@ -32,7 +32,7 @@ def select_game() -> str:
 
 def run():
     # For now this is an array of str, might make game obj possibly
-    games = ["Tetris", "Bejewled"] 
+    games = ["Tetris", "Bejeweled"] 
 
     players = login()
     display_games(games)

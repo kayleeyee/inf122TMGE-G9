@@ -8,9 +8,23 @@ class Tetris(Game):
 
     grid = None
 
-    def __init__(self, game_name, players) -> None:
-        super.__init__(self, self.GAME_NAME, players)
-        self.grid = Grid(self.TETRIS_ROWS, self.TETRIS_COLS)
+    def __init__(self, players) -> None:
+        super.__init__(self, self.TETRIS_ROWS, self.TETRIS_COLS, self.GAME_NAME, players)
 
     def addNewPieces(self):
+        pass
+    
+    def takeUserInput(self):
+        pass
+
+    def endGame(self) -> bool:
+        pass
+
+    def checkMatch(self):
+        #for row in range(len(self.grid)):
+         #   for column in range(len(self.grid[row])):
+         #       if self.grid[row][column].is_empty == False: #?
+          #          return
+                
+            #...
         pass

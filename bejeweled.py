@@ -7,9 +7,8 @@ class Bejeweled(Game) :
     BEJEWELED_COLS = 8
 
     def __init__(self, players):
-        super.__init__(self, self.GAME_NAME, players)
-        self.grid = Grid(self.BEJEWELED_ROWS, self.BEJEWELED_COLS)
-        # create board for game here ~ clear any matches beforehand until no more
+        super.__init__(self, self.BEJEWELED_ROWS, self.BEJEWELED_COLS, self.GAME_NAME, players)
+        # create board for game here ~ clear any matches beforehand until no more ?
         # have a preset board? "Levels"
 
     def addNewPieces(self):
@@ -20,4 +19,7 @@ class Bejeweled(Game) :
         pass
 
     def checkMatch(self):
+        '''
+
+        '''
         pass
