@@ -8,12 +8,6 @@ class Game(ABC):
     We included template methods that standardize the generic game loop, while allowing
     for each TMG to implement their own varying game logic. 
     '''
-    
-    grid_rows = 0
-    grid_cols = 0
-    game_name = ''
-    grid = None
-    players = []
 
     def __init__(self, num_rows, num_cols, game_name, players) -> None:
         self.grid_rows = num_rows
@@ -21,6 +15,7 @@ class Game(ABC):
         self.game_name = game_name
         self.grid = Grid(self.grid_rows, self.grid_cols)
         self.players = players
+        self.current_player_index = 0 # so you know who to give points to?
         
 
     def runGameLoop(self):
@@ -28,7 +23,6 @@ class Game(ABC):
         This is the template method for all TMGs. It outlines the general game loop
         that each TMG should follow.
         '''
-        grid = Grid() # initialize grid kind of thing ~ for Bejeweled -> populates board. for Tetris ~ shows first falling piece
         self.populate_initial_grid()
         while(not self.endGame()):
             # self.addNewPieces() ~ prob better to call when processing game matches.
