@@ -153,6 +153,13 @@ class Bejeweled(Game) :
         
     def _movePiecesDown(self):
         '''
-        kaylee
+        Given the match coordinates, moves the pieces down in each column
         '''
-        pass
+        for coord in self._match_coordinates:
+            row = coord.x
+            col = coord.y
+            for r in range(row, 0, -1): # Move everything down in a singular column
+                # Move the piece down by one position
+                self.grid[r][col] = self.grid[r - 1][col]
+            # Set the topmost piece in the column to None
+            self.grid[0][col] = None
