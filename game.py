@@ -9,13 +9,14 @@ class Game(ABC):
     for each TMG to implement their own varying game logic. 
     '''
 
-    def __init__(self, num_rows, num_cols, game_name, players) -> None:
-        self.grid_rows = num_rows
-        self.grid_cols = num_cols
-        self.game_name = game_name
-        self.grid = Grid(self.grid_rows, self.grid_cols)
-        self.players = players
-        self.current_player_index = 0 # so you know who to give points to?
+    # No init b/c nothing should be instantiated as an abstract Game object
+    # def __init__(self, num_rows, num_cols, game_name, players) -> None:
+    #     self.grid_rows = num_rows
+    #     self.grid_cols = num_cols
+    #     self.game_name = game_name
+    #     self.grid = Grid(self.grid_rows, self.grid_cols)
+    #     self.players = players
+    #     self.current_player_index = 0 # so you know who to give points to?
         
 
     def runGameLoop(self):

@@ -7,9 +7,9 @@ class Grid:
         self.create_grid(rows, columns)
     
     def create_grid(self, rows, columns) -> None:
-        for row in rows:
+        for row in range(rows):
             row_matrix =  []
-            for column in columns:
+            for column in range(columns):
                 row_matrix.append(Color("COLORLESS")) 
             self.matrix.append(row_matrix)
     
