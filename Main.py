@@ -6,6 +6,7 @@
 # in run()
 
 import player
+from tetris import Tetris
 
 def login() -> None:
     print('Welcome to the TMGE')
@@ -32,11 +33,12 @@ def select_game() -> str:
 
 def run():
     # For now this is an array of str, might make game obj possibly
-    games = ["Tetris", "Bejeweled"] 
+    #games = ["Tetris", "Bejeweled"] 
 
-    players = login()
-    display_games(games)
-    game = select_game()
+    #players = login()
+    #display_games(games)
+    print("Main")
+    game = Tetris([player.Player("1"), player.Player("2")])
 
     # Maybe we could do something like
     # new_game = Game(game)
