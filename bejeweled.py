@@ -101,7 +101,7 @@ class Bejeweled(Game) :
         Checks whole board for any matches that were made (from falling/grid creation).
         If there were matches made, the player's score is updated.
         '''
-        old_score = 0
+        old_score = -1
         current_score = 0
 
         # loop stops when score does not increase after an iteration
