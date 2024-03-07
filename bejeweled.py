@@ -44,7 +44,10 @@ class Bejeweled(Game) :
             for j in range(self.BEJEWELED_COLS):
                 if self.grid.matrix[i][j] == Color.COLORLESS:
                     self.grid.matrix[i][j] = random.choice(self._colors)
-        self._checkGridMatch() 
+
+        # add score to current player!
+        score = self._checkGridMatch() 
+        self.players[current_player_index].add_to_score(score)
 
 
     def processUserInput(self, user_input):
@@ -123,15 +126,13 @@ class Bejeweled(Game) :
             for row in range(self.BEJEWELED_ROWS):
                 for col in range(self.BEJEWELED_COLS-2):
                     current_score += self._checkRowMatch(row, col)
-                    # remove later:
-                    self.players[self.current_player_index].add_to_score(self._checkRowMatch(row, col))
 
             # clearing column matches next 
             for row in range(self.BEJEWELED_ROWS-2):
                 for col in range(self.BEJEWELED_COLS):
                     current_score += self._checkColMatch(row, col)
         
-        #return current_score ?
+        return current_score
                 
             
     def _checkMoveMatch(self, new_x, new_y, old_x, old_y) -> int:
@@ -148,6 +149,9 @@ class Bejeweled(Game) :
         # if the move did not result in a match, swap back
         if score == 0:
             self._swapGems(new_x, new_y, old_x, old_y)
+        
+        # returns score, which should be added to player's total score
+        return score
 
 
     def _removeMatch(self):
@@ -166,7 +170,17 @@ class Bejeweled(Game) :
         points_scored = 0
         self._match_coordinates = [Coordinate(x, y)]
 
-        if self._rowMatchLength(x, y) >= 3:
+        match_size = self._rowMatchLength(x, y)
+        if match_size >= 3:
+            # add points that the player should receive.
+            if match_size == 3:
+                points_scored += self.BEJEWELED_3_MATCH
+            elif match_size == 4:
+                points_scored += self.BEJEWELED_4_MATCH
+            else:
+                # only other possible match is a 5 match.
+                points_scored += self.BEJEWELED_5_MATCH
+            
             self._removeMatch()
             # move pieces above down/add new pieces
 
@@ -191,7 +205,17 @@ class Bejeweled(Game) :
         points_scored = 0
         self._match_coordinates = [Coordinate(x, y)]
 
-        if self._colMatchLength(x, y) >= 3:
+        match_size = self._colMatchLength(x, y)
+        if match_size >= 3:
+            # add points that the player should receive.
+            if match_size == 3:
+                points_scored += self.BEJEWELED_3_MATCH
+            elif match_size == 4:
+                points_scored += self.BEJEWELED_4_MATCH
+            else:
+                # only other possible match is a 5 match.
+                points_scored += self.BEJEWELED_5_MATCH
+
             self._removeMatch()
             # move pieces above down/add new pieces
 
