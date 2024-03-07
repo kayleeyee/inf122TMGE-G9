@@ -38,18 +38,19 @@ def pass_input(x: int, y: int, b_width, b_height):
     # Will eventually call something
     # diff than print
     i, j = canvas_to_matrix(x, y, b_width, b_height);
-    print(i, j)
+    #print(i, j)
 
 
 # Take in a matrix and display each square
 # Let's suppose it's a list of colors for now
 # This can change in the future
-def fill_matrix(arr : list, canvas : tk.Canvas, b_width, b_height) -> None:
+def fill_canvas(arr : list, canvas : tk.Canvas, b_width, b_height) -> None:
     for i in range(len(arr)):
         for j in range(len(arr[0])):
-            x, y = matrix_to_canvas(i, j)
+            x, y = matrix_to_canvas(i, j, b_width, b_height)
             color = arr[i][j]
-            canvas.create_rectangle(x,y,x+b_width,+b_height, fill=color)    
+            # In the case of tetris, this outline might change so that they layer
+            canvas.create_rectangle(x,y,x+b_width,y+b_height, fill=color, outline = "black")    
 
 # Not sure if we're gonna use actual images or not
 
@@ -69,6 +70,12 @@ def run():
 
     canvas = draw_grid(window, GRID_WIDTH, GRID_HEIGHT, COL, ROWS, LINE_WIDTH) # Draw Grid
     window.bind('<Button-1>', lambda e : pass_input(e.x, e.y, BLOCK_W, BLOCK_H)) # Handle Events
+
+    matrix_arr = [["white","black","blue", "red", "purple"],
+                  ["red","orange","white","yellow","white"],
+                  ["orange","white","pink","purple","blue"]]
+    
+    fill_canvas(matrix_arr, canvas, BLOCK_W, BLOCK_H)
 
     window.mainloop()
 
