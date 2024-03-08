@@ -47,7 +47,7 @@ class Bejeweled(Game) :
 
         # add score to current player!
         score = self._checkGridMatch() 
-        self.players[current_player_index].add_to_score(score)
+        self.players[self.current_player_index].add_to_score(score)
 
 
     def processUserInput(self, user_input):
