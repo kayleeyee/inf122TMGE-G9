@@ -32,6 +32,8 @@ class Game(ABC):
             self.checkMatch() # update score if necessary inside this method
             # update display ~ updated within various functions too?
     
+    # TODO: Need to add a method that sends the grid to the GUI to update display
+    # TODO: Add a method that displays which player is playing and the scores
     
     @abstractmethod       
     def populate_initial_grid(self):
@@ -57,6 +59,7 @@ class Game(ABC):
     def checkMatch(self):
         pass
 
+    
     
 
     
