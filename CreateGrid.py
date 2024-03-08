@@ -52,17 +52,20 @@ def fill_canvas(arr : list, canvas : tk.Canvas, b_width, b_height) -> None:
             # In the case of tetris, this outline might change so that they layer
             canvas.create_rectangle(x,y,x+b_width,y+b_height, fill=color, outline = "black")    
 
-# Not sure if we're gonna use actual images or not
 
 def run():
     window = tk.Tk()
 
+    # These constants can be replaced with your grid 
     GRID_WIDTH = 500;
     GRID_HEIGHT = 300;
 
-    COL = 5;
-    ROWS = 3;
+    # These can be changed to work with Grid
+    # i.e. COL = Grid.getCols()
+    COL = 10;
+    ROWS = 6;
 
+    # Leave these for clarity
     BLOCK_W = GRID_WIDTH/COL
     BLOCK_H = GRID_HEIGHT/ROWS
 
@@ -71,12 +74,18 @@ def run():
     canvas = draw_grid(window, GRID_WIDTH, GRID_HEIGHT, COL, ROWS, LINE_WIDTH) # Draw Grid
     window.bind('<Button-1>', lambda e : pass_input(e.x, e.y, BLOCK_W, BLOCK_H)) # Handle Events
 
+    # Sample matrix that has some sample colors
+    # If the game has a matrix with colors, this can also be returned
     matrix_arr = [["white","black","blue", "red", "purple"],
                   ["red","orange","white","yellow","white"],
                   ["orange","white","pink","purple","blue"]]
     
-    fill_canvas(matrix_arr, canvas, BLOCK_W, BLOCK_H)
+    #fill_canvas(matrix_arr, canvas, BLOCK_W, BLOCK_H)
 
     window.mainloop()
 
+    # If the game returns end game is true, then I have to stop the main loop
+    # TODO: Look for how to end this
+
+# Call run(), in order to run this
 run()
