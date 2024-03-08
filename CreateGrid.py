@@ -38,7 +38,7 @@ def pass_input(x: int, y: int, b_width, b_height):
     # Will eventually call something
     # diff than print
     i, j = canvas_to_matrix(x, y, b_width, b_height);
-    #print(i, j)
+    print(j, i)
 
 
 # Take in a matrix and display each square
@@ -47,7 +47,7 @@ def pass_input(x: int, y: int, b_width, b_height):
 def fill_canvas(arr : list, canvas : tk.Canvas, b_width, b_height) -> None:
     for i in range(len(arr)):
         for j in range(len(arr[0])):
-            x, y = matrix_to_canvas(i, j, b_width, b_height)
+            y, x = matrix_to_canvas(i, j, b_width, b_height)
             color = arr[i][j]
             # In the case of tetris, this outline might change so that they layer
             canvas.create_rectangle(x,y,x+b_width,y+b_height, fill=color, outline = "black")    
