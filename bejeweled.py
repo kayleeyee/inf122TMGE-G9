@@ -59,7 +59,7 @@ class Bejeweled(Game) :
         Indicates whether the game is over or not.
         '''
         if self._level_complete:
-            # self.current_player_index 
+            self.current_player_index += 1
             return True
 
         return False
