@@ -28,12 +28,13 @@ class Game(ABC):
         This is the template method for all TMGs. It outlines the general game loop
         that each TMG should follow.
         '''
+        print("RunGameLoop")
         #grid = Grid() # initialize grid kind of thing ~ for Bejeweled -> populates board. for Tetris ~ shows first falling piece
         self.populate_initial_grid()
         while(not self.endGame()):
             # self.addNewPieces() ~ prob better to call when processing game matches.
-            user_input = self.takeUserInput()
-            #print(user_input)
+            user_input = input("Enter a move: ")
+            print(user_input)
             self.processUserInput(user_input)
             self.checkMatch() # update score if necessary inside this method
             # update display ~ updated within various functions too?
@@ -48,7 +49,7 @@ class Game(ABC):
         pass
     
     def takeUserInput(self):
-        user_input = input()
+        user_input = input("Enter a move: ")
         return user_input
 
     @abstractmethod    

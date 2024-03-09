@@ -9,3 +9,4 @@ class Color(Enum):
     YELLOW = "YELLOW"
     ORANGE = "ORANGE" 
     COLORLESS = "COLORLESS"
+    PINK  = "PINK"

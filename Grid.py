@@ -18,6 +18,7 @@ class Grid:
         return self.matrix
     
     
+    
     def display(self) -> None:
         print(self.matrix)
 

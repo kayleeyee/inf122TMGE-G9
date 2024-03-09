@@ -1,4 +1,4 @@
-# main.py
+# main.pys
 # Written by: Sofia Perez de Tudela
 # 
 # This class is what's called to get the TMGE started
@@ -39,6 +39,7 @@ def run():
     #display_games(games)
     print("Main")
     game = Tetris([player.Player("1"), player.Player("2")])
+    #game.runGameLoop()
 
     # Maybe we could do something like
     # new_game = Game(game)
