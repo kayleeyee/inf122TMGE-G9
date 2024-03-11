@@ -88,5 +88,4 @@ def run():
     # TODO: Look for how to end this
 
 # Call run(), in order to run this
-# Kele - Commented this out:
-# run()
+run()
