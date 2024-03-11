@@ -37,7 +37,7 @@ def canvas_to_matrix(x: int, y: int, b_width, b_height) -> tuple:
 def pass_input(x: int, y: int, b_width, b_height):
     # Will eventually call something
     # diff than print
-    i, j = canvas_to_matrix(x, y, b_width, b_height);
+    i, j = canvas_to_matrix(x, y, b_width, b_height)
     print(j, i)
 
 
@@ -88,4 +88,5 @@ def run():
     # TODO: Look for how to end this
 
 # Call run(), in order to run this
-run()
+# Kele - Commented this out:
+# run()
