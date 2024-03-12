@@ -53,17 +53,19 @@ def fill_canvas(arr : list, canvas : tk.Canvas, b_width, b_height) -> None:
             canvas.create_rectangle(x,y,x+b_width,y+b_height, fill=color, outline = "black")    
 
 
-def run():
+def run(num_rows, num_cols, matrix):
     window = tk.Tk()
 
     # These constants can be replaced with your grid 
-    GRID_WIDTH = 500;
-    GRID_HEIGHT = 300;
+    GRID_WIDTH = 500
+    GRID_HEIGHT = 300
 
     # These can be changed to work with Grid
     # i.e. COL = Grid.getCols()
-    COL = 10;
-    ROWS = 6;
+    # COL = 10
+    # ROWS = 6
+    COL = num_cols
+    ROWS = num_rows
 
     # Leave these for clarity
     BLOCK_W = GRID_WIDTH/COL
@@ -76,9 +78,10 @@ def run():
 
     # Sample matrix that has some sample colors
     # If the game has a matrix with colors, this can also be returned
-    matrix_arr = [["white","black","blue", "red", "purple"],
-                  ["red","orange","white","yellow","white"],
-                  ["orange","white","pink","purple","blue"]]
+    # matrix_arr = [["white","black","blue", "red", "purple"],
+    #               ["red","orange","white","yellow","white"],
+    #               ["orange","white","pink","purple","blue"]]
+    matrix_arr = matrix
     
     #fill_canvas(matrix_arr, canvas, BLOCK_W, BLOCK_H)
 
@@ -88,4 +91,4 @@ def run():
     # TODO: Look for how to end this
 
 # Call run(), in order to run this
-run()
+# run()

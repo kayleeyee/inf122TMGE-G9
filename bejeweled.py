@@ -2,6 +2,7 @@ from Grid import Grid
 from game import Game
 from Color import Color
 from player import Player
+import CreateGrid
 import random
 
 from collections import namedtuple
@@ -52,7 +53,7 @@ class Bejeweled(Game) :
 
         # add score to current player!
         score = self._checkGridMatch() 
-        self.players[self.current_player_index].add_to_score(score)
+        self.players[self.current_player_index].addToScore(score)
 
 
     def processUserInput(self, user_input):
@@ -359,9 +360,52 @@ class Bejeweled(Game) :
                 new_row.append(self.grid.matrix[r][c].name)
             print(new_row)
 
+    def makeLower(self, matrix):
+        new_matrix = []
+
+        for row in range(self.BEJEWELED_ROWS):
+            row_matrix =  []
+            for column in range(self.BEJEWELED_COLS):
+                # print(self.grid.matrix[row][column].name.lower())
+                row_matrix.append(self.grid.matrix[row][column].name.lower())
+            new_matrix.append(row_matrix)
+        print(new_matrix)
+        return new_matrix
+
 
 if __name__ == "__main__":
     players = [Player('p1'), Player('p2')]
     bj = Bejeweled(players)
-    bj.populate_initial_grid()
+    bj.populateInitialGrid()
     # bj.printGrid()
+    CreateGrid.run(bj.BEJEWELED_ROWS, bj.BEJEWELED_COLS, bj.makeLower(bj.grid.matrix))
+
+    # window = tk.Tk()
+    # GRID_WIDTH = 500;
+    # GRID_HEIGHT = 300;
+
+    # # These can be changed to work with Grid
+    # # i.e. COL = Grid.getCols()
+    # COL = 10;
+    # ROWS = 6;
+
+    # # Leave these for clarity
+    # BLOCK_W = GRID_WIDTH/COL
+    # BLOCK_H = GRID_HEIGHT/ROWS
+
+    # LINE_WIDTH = .5
+
+    # canvas = CreateGrid.draw_grid(window, GRID_WIDTH, GRID_HEIGHT, COL, ROWS, LINE_WIDTH)
+
+    # window.mainloop()
+    # CreateGrid.fill_canvas(bj.grid.matrix, canvas)
+
+
+
+    # # # Sample matrix that has some sample colors
+    # # # If the game has a matrix with colors, this can also be returned
+    # # matrix_arr = [["white","black","blue", "red", "purple"],
+    # #               ["red","orange","white","yellow","white"],
+    # #               ["orange","white","pink","purple","blue"]]
+    
+    # #fill_canvas(matrix_arr, canvas, BLOCK_W, BLOCK_H)
