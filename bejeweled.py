@@ -23,10 +23,15 @@ class Bejeweled(Game) :
         self.current_player_index = 0 # so you know who to give points to?
         self._match_coordinates = []
         self._colors = list(Color)[:self.BEJEWELED_COLORS] 
+        # Kele added:
+        self._clicked_gems_coordinates = []
 
 
+    def displayPlayerScore(self):
+        print(f"{self.players[self._current_player_index].getName()}'s score: {self.players[self._current_player_index].getScore()}")
 
-    def populate_initial_grid(self):
+
+    def populateInitialGrid(self):
         '''
         Bejeweled's grid initialization. Method fills the Grid with random Color values, then
         checks for any matches that may have been made in the Grid initialization, clearing them
@@ -51,7 +56,9 @@ class Bejeweled(Game) :
 
 
     def processUserInput(self, user_input):
-        pass    
+        pass
+    # Kele - still not sure how input is being passed in
+    # if two gems are clicked, swap them??? 
     
 
     def endGame(self) -> bool:
@@ -65,8 +72,24 @@ class Bejeweled(Game) :
         return False
 
 
+    # Maybe have something that keeps track of gems that are clicked?
+    # and if this 
     def checkMatch(self):
-        pass
+        '''
+        If two gems have been switched, this method checks to see if any matches were made.
+        From there, the player's score if updated
+        '''
+        if len(self._clicked_gems_coordinates) == 2:
+            # if the swap was invalid, this variable is len 0 again
+            old_x = self._clicked_gems_coordinates[0].x
+            old_y = self._clicked_gems_coordinates[0].y
+            new_x = self._clicked_gems_coordinates[1].x
+            new_y = self._clicked_gems_coordinates[1].y
+
+            score = self._checkMoveMatch(new_x, new_y, old_x, old_y)
+
+            self.players[self._current_player_index].addToScore(score)
+
 
 
     def _level_complete(self) -> bool:
@@ -103,16 +126,19 @@ class Bejeweled(Game) :
 
     def _swapGems(self, gem1_x, gem1_y, gem2_x, gem2_y):
         '''
-        Swaps Gems within the Grid.
+        Swaps adjacent Gems within the Grid.
         '''
         if self._isValidSwap(gem1_x, gem1_y, gem2_x, gem2_y):
             self._grid[gem1_x][gem1_y], self._grid[gem2_x][gem2_y] = self._grid[gem2_x][gem2_y], self._grid[gem1_x][gem1_y]
+        else:
+            print("Invalid swap, try again.")
+            self._clicked_gems_coordinates = []
 
 
     def _checkGridMatch(self) -> int:
         '''
         Checks whole board for any matches that were made (from falling/grid creation).
-        If there were matches made, the player's score is updated.
+        If there were matches made, the score that the player's score should be increased by is returned.
         '''
         old_score = -1
         current_score = 0
@@ -140,11 +166,12 @@ class Bejeweled(Game) :
         Checks surrounding area of a move made by the player to see if there was a match made.
         If a match was successful
         '''
-        # dunno if original swapping should also happen here?
         score = 0
-
+        
         score += self._checkRowMatch(new_x, new_y)
         score += self._checkColMatch(new_x, new_y)
+        score += self._checkRowMatch(old_x, old_y)
+        score += self._checkColMatch(old_x, old_y)
 
         # if the move did not result in a match, swap back
         if score == 0:

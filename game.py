@@ -7,17 +7,7 @@ class Game(ABC):
     This is the abstract class from which all Tile Matching Games inherit from.
     We included template methods that standardize the generic game loop, while allowing
     for each TMG to implement their own varying game logic. 
-    '''
-
-    # No init b/c nothing should be instantiated as an abstract Game object
-    # def __init__(self, num_rows, num_cols, game_name, players) -> None:
-    #     self.grid_rows = num_rows
-    #     self.grid_cols = num_cols
-    #     self.game_name = game_name
-    #     self.grid = Grid(self.grid_rows, self.grid_cols)
-    #     self.players = players
-    #     self.current_player_index = 0 # so you know who to give points to?
-        
+    '''        
 
     def runGameLoop(self):
         '''
@@ -26,17 +16,27 @@ class Game(ABC):
         '''
         self.populate_initial_grid()
         while(not self.endGame()):
-            # self.addNewPieces() ~ prob better to call when processing game matches.
             user_input = self.takeUserInput()
             self.processUserInput(user_input)
             self.checkMatch() # update score if necessary inside this method
+            self.displayPlayerScore()
             # update display ~ updated within various functions too?
     
     # TODO: Need to add a method that sends the grid to the GUI to update display
-    # TODO: Add a method that displays which player is playing and the scores
+    # TODO: Add a method that displays which player is playing and the scores 
+            # ^ feels like it can be done concretely, but players info is stored in concrete Game child classes :(
+    
+    '''
+    if concrete, do it like this:
+    def displayPlayerScore(self):
+        print(f"{self.players[self._current_player_index].getName()}'s score: {self.players[self._current_player_index].getScore()}")
+    '''
+    @abstractmethod
+    def displayPlayerScore(self):
+        pass
     
     @abstractmethod       
-    def populate_initial_grid(self):
+    def populateInitialGrid(self):
         pass
     
     @abstractmethod
