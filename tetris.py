@@ -33,7 +33,7 @@ class Tetris(Game):
     
     GAME_NAME = 'Tetris'
     TETRIS_ROWS = 10
-    TETRIS_COLS = 20
+    TETRIS_COLS = 5
     
     END_GAME_SCORE = 300
 
@@ -68,13 +68,15 @@ class Tetris(Game):
         self.current_piece = piece
         self.current_piece_key = piece_key
         self.current_piece_color = self.color_pieces[self.current_piece_key]
+        self.current_piece_start_row = 0
         self.current_piece_start_col = (self.TETRIS_COLS - len(self.current_piece[0])) // 2
         
         #add new piece to grid
-        for row in range(len(piece)):
-            for col in range(len(piece[row])):
-                if piece[row][col] == 1:           
-                    self.grid.matrix[start_row + row][start_col + col] = Color(self.current_piece_color)
+        if(not self._check_collison(self.current_piece, self.grid, self.current_piece_start_row, self.current_piece_start_col)):
+            for row in range(len(piece)):
+                for col in range(len(piece[row])):
+                    if piece[row][col] == 1:           
+                        self.grid.matrix[start_row + row][start_col + col] = Color(self.current_piece_color)
 
         self.tetris_testing_matrix()  
     
@@ -102,46 +104,65 @@ class Tetris(Game):
             self.grid = temp_grid
 
             self.current_piece = rotated_piece
-            self.current_piece_start_row = new_start_col
+            self.current_piece_start_col = new_start_col
+            
+        self.tetris_testing_matrix()  
     
     def _move_down(self):
-        while (not self._check_collison(self.current_piece, self.grid, self.current_piece_start_row + 1, self.current_piece_start_col)):
-            temp_row = self.current_piece_start_row + 1
+        temp_grid = copy.deepcopy(self.grid)
 
-            for row in range(len(self.current_piece)):
-                for col in range(len(self.current_piece[row])):
-                    if self.current_piece[row][col] == 1:
-                        self.grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = Color("COLORLESS")
-                        self.grid.matrix[temp_row + row][self.current_piece_start_col + col] = Color(self.current_piece_color)
-            
+        for row in range(len(self.current_piece)):
+            for col in range(len(self.current_piece[row])):
+                if self.current_piece[row][col] == 1:
+                    temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = Color("COLORLESS")
+                    
+        while ((self.current_piece_start_row + 1 < self.TETRIS_ROWS) and (not self._check_collison(self.current_piece, temp_grid, self.current_piece_start_row + 1, self.current_piece_start_col))):
             self.current_piece_start_row += 1
         
-        # TEMP
+        for row in range(len(self.current_piece)):
+                for col in range(len(self.current_piece[row])):
+                    if self.current_piece[row][col] == 1:
+                        temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = Color(self.current_piece_color)
+        
+        self.grid = temp_grid
+
         self.checkMatch()
+        self.tetris_testing_matrix()  
 
     def _move_left(self):
-        if (not self._check_collison(self.current_piece, self.grid, self.current_piece_start_row, self.current_piece_start_col - 1)): #??
-            temp_col = self.current_piece_start_col - 1
+        temp_grid = copy.deepcopy(self.grid)
 
+        for row in range(len(self.current_piece)):
+            for col in range(len(self.current_piece[row])):
+                if self.current_piece[row][col] == 1:
+                    temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = Color("COLORLESS")
+                    
+        if (((self.current_piece_start_col - 1) >= 0) and (not self._check_collison(self.current_piece, temp_grid, self.current_piece_start_row, self.current_piece_start_col - 1))): #??
             for row in range(len(self.current_piece)):
                 for col in range(len(self.current_piece[row])):
                     if self.current_piece[row][col] == 1:
-                        self.grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = Color("COLORLESS")
-                        self.grid.matrix[self.current_piece_start_row + row][temp_col + col] = Color(self.current_piece_color)
-            
+                        temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col - 1 + col] = Color(self.current_piece_color)
+            self.grid = temp_grid
             self.current_piece_start_col -= 1
+                
+        self.tetris_testing_matrix()  
 
     def _move_right(self):
-        if (not self._check_collison(self.current_piece, self.grid, self.current_piece_start_row, self.current_piece_start_col + 1)): #??
-            temp_col = self.current_piece_start_col + 1
+        temp_grid = copy.deepcopy(self.grid)
 
+        for row in range(len(self.current_piece)):
+            for col in range(len(self.current_piece[row])):
+                if self.current_piece[row][col] == 1:
+                    temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = Color("COLORLESS")
+         
+        if ((self.current_piece_start_col + 1 < self.TETRIS_COLS) and not self._check_collison(self.current_piece, temp_grid, self.current_piece_start_row, self.current_piece_start_col + 1)): #??
             for row in range(len(self.current_piece)):
                 for col in range(len(self.current_piece[row])):
                     if self.current_piece[row][col] == 1:
-                        self.grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = Color("COLORLESS")
-                        self.grid.matrix[self.current_piece_start_row + row][temp_col + col] = Color(self.current_piece_color)
-            
+                        temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + 1 + col] = Color(self.current_piece_color)
+            self.grid = temp_grid
             self.current_piece_start_col += 1
+        self.tetris_testing_matrix()  
 
     def _choose_new_pieces(self):
         new_piece_key = random.choice(self.piece_keys)
@@ -225,11 +246,12 @@ class Tetris(Game):
         '''This will create a new piece after every move given the implementation of the game loop
         We will either need to find a way to keep track of when a piece is still in play to not create a new one, or see if we can change
         the game loop implementation so that it does not check match after every user_input'''
-        if (not self._check_collison):
-            self.addNewPieces()
+         
+        self.addNewPieces()
+        self.tetris_testing_matrix() 
 
     def tetris_testing_matrix(self):
         for row in range(self.TETRIS_ROWS):
             for col in range(self.TETRIS_COLS):
-                print("| " + Color(self.grid.matrix[row][col]) + " |")
+                print(("| " + Color(self.grid.matrix[row][col]).value + " |").center(20), end="")
             print("\n ________________________________________")
