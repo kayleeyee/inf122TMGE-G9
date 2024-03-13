@@ -38,6 +38,7 @@ class Tetris(Game):
     END_GAME_SCORE = 300
 
     piece_keys = list(pieces.keys())
+    last_move = None
     
     #grid = None
 
@@ -105,18 +106,20 @@ class Tetris(Game):
 
             self.current_piece = rotated_piece
             self.current_piece_start_col = new_start_col
-            
+
+        self.last_move = "rotate"
         self.tetris_testing_matrix()  
     
     def _move_down(self):
         temp_grid = copy.deepcopy(self.grid)
+        
 
         for row in range(len(self.current_piece)):
             for col in range(len(self.current_piece[row])):
                 if self.current_piece[row][col] == 1:
                     temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = Color("COLORLESS")
                     
-        while ((self.current_piece_start_row + 1 < self.TETRIS_ROWS) and (not self._check_collison(self.current_piece, temp_grid, self.current_piece_start_row + 1, self.current_piece_start_col))):
+        while ((self.current_piece_start_row + 1 <= (self.TETRIS_ROWS - len(self.current_piece))) and (not self._check_collison(self.current_piece, temp_grid, self.current_piece_start_row + 1, self.current_piece_start_col))):
             self.current_piece_start_row += 1
         
         for row in range(len(self.current_piece)):
@@ -125,8 +128,9 @@ class Tetris(Game):
                         temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = Color(self.current_piece_color)
         
         self.grid = temp_grid
+        self.last_move = "down"
 
-        self.checkMatch()
+        #self.checkMatch()
         self.tetris_testing_matrix()  
 
     def _move_left(self):
@@ -144,7 +148,7 @@ class Tetris(Game):
                         temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col - 1 + col] = Color(self.current_piece_color)
             self.grid = temp_grid
             self.current_piece_start_col -= 1
-                
+        self.last_move = "left"
         self.tetris_testing_matrix()  
 
     def _move_right(self):
@@ -154,14 +158,15 @@ class Tetris(Game):
             for col in range(len(self.current_piece[row])):
                 if self.current_piece[row][col] == 1:
                     temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = Color("COLORLESS")
-         
-        if ((self.current_piece_start_col + 1 < self.TETRIS_COLS) and not self._check_collison(self.current_piece, temp_grid, self.current_piece_start_row, self.current_piece_start_col + 1)): #??
+        
+        if ((self.current_piece_start_col + 1 <= (self.TETRIS_COLS - len(self.current_piece[0]))) and not self._check_collison(self.current_piece, temp_grid, self.current_piece_start_row, self.current_piece_start_col + 1)): #??
             for row in range(len(self.current_piece)):
                 for col in range(len(self.current_piece[row])):
                     if self.current_piece[row][col] == 1:
                         temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + 1 + col] = Color(self.current_piece_color)
             self.grid = temp_grid
             self.current_piece_start_col += 1
+        self.last_move = "right"
         self.tetris_testing_matrix()  
 
     def _choose_new_pieces(self):
@@ -214,6 +219,14 @@ class Tetris(Game):
 
     def checkMatch(self):
         #add list of rows' index to delete
+
+        #Testing
+        print("\n THIS IS THE CURRENT PIECE SELECTED:")
+        print(self.current_piece_color)
+        print(self.current_piece_key)
+        print("THIS IS THE LAST MOVE MADE:")
+        print(self.last_move)
+        #Testing
         rows_to_delete = []
         for row in range(self.TETRIS_ROWS, self.current_piece_start_row):
             row_all_color = True
@@ -241,17 +254,22 @@ class Tetris(Game):
             self.grid.matrix = empty_rows+rows_kept
 
             self.players[self.current_player_index].add_to_score(len(rows_to_delete)*10)
+            
+        if self.last_move == "down":
+            self.addNewPieces()
         
         #add new piece after checking
         '''This will create a new piece after every move given the implementation of the game loop
         We will either need to find a way to keep track of when a piece is still in play to not create a new one, or see if we can change
         the game loop implementation so that it does not check match after every user_input'''
          
-        self.addNewPieces()
+        # self.addNewPieces()
         self.tetris_testing_matrix() 
 
     def tetris_testing_matrix(self):
         for row in range(self.TETRIS_ROWS):
             for col in range(self.TETRIS_COLS):
-                print(("| " + Color(self.grid.matrix[row][col]).value + " |").center(20), end="")
-            print("\n ________________________________________")
+                print(("| " + Color(self.grid.matrix[row][col]).value + " |").center(15), end="")
+            print("\n ____________________________________________________________________________")
+        print("\n")
+        print("\n")
