@@ -221,14 +221,15 @@ class Tetris(Game):
         #add list of rows' index to delete
 
         #Testing
-        print("\n THIS IS THE CURRENT PIECE SELECTED:")
+        '''print("\n THIS IS THE CURRENT PIECE SELECTED:")
         print(self.current_piece_color)
         print(self.current_piece_key)
         print("THIS IS THE LAST MOVE MADE:")
-        print(self.last_move)
+        print(self.last_move)'''
         #Testing
         rows_to_delete = []
-        for row in range(self.TETRIS_ROWS, self.current_piece_start_row):
+        
+        for row in range(self.TETRIS_ROWS):
             row_all_color = True
             for col in range(self.TETRIS_COLS):
                 if self.grid.return_grid()[row][col] == Color("COLORLESS"):
@@ -238,18 +239,23 @@ class Tetris(Game):
                 rows_to_delete.append(row)
         
         #if there are row(s) to delete, empty the row
-        if len(rows_to_delete) != 0:        
+        if len(rows_to_delete) != 0: 
+
+            #print("HERE ARE THE ROWS TO DELETE: ")
+            #print(rows_to_delete)      
             rows_kept= []
             for row in range(self.TETRIS_ROWS):
                 if row not in rows_to_delete:
                     rows_kept.append(self.grid.return_grid()[row])
+
+            
             
             empty_rows = []
             for empty_row  in range(len(rows_to_delete)):
                 columns_of_row = []
                 for col in range(self.TETRIS_COLS):
                     columns_of_row.append(Color("COLORLESS"))
-                empty_row.append(columns_of_row)
+                empty_rows.append(columns_of_row)
             
             self.grid.matrix = empty_rows+rows_kept
 
