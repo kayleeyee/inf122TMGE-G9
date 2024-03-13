@@ -2,7 +2,7 @@ from Grid import Grid
 from game import Game
 from Color import Color
 from player import Player
-import CreateGrid
+import GridGUI
 import random
 
 from collections import namedtuple
@@ -27,7 +27,13 @@ class Bejeweled(Game) :
         # Kele added:
         self._clicked_gems_coordinates = []
 
-
+    def printInstructions(self):
+        '''
+        Prints instructions on how to play Bejeweled to the player's terminal
+        '''
+        instructions = 'Welcome to Bejeweled!\nTo play this game, '
+        print(instructions)
+    
     def displayPlayerScore(self):
         print(f"{self.players[self._current_player_index].getName()}'s score: {self.players[self._current_player_index].getScore()}")
 
@@ -56,10 +62,16 @@ class Bejeweled(Game) :
         self.players[self.current_player_index].addToScore(score)
 
 
-    def processUserInput(self, user_input):
-        pass
-    # Kele - still not sure how input is being passed in
-    # if two gems are clicked, swap them??? 
+    def processUserInput(self, j, i):
+        if Coordinate(j, i) not in self._clicked_gems_coordinates and len(self._clicked_gems_coordinates) < 2:
+            self._clicked_gems_coordinates.append(Coordinate(j, i))
+        
+        if len(self._clicked_gems_coordinates) == 2:
+            old_x = self._clicked_gems_coordinates[0].x
+            old_y = self._clicked_gems_coordinates[0].y
+            new_x = self._clicked_gems_coordinates[1].x
+            new_y = self._clicked_gems_coordinates[1].y
+            self._swapGems(old_x, old_y, new_x, new_y)
     
 
     def endGame(self) -> bool:
@@ -73,8 +85,6 @@ class Bejeweled(Game) :
         return False
 
 
-    # Maybe have something that keeps track of gems that are clicked?
-    # and if this 
     def checkMatch(self):
         '''
         If two gems have been switched, this method checks to see if any matches were made.
@@ -90,7 +100,6 @@ class Bejeweled(Game) :
             score = self._checkMoveMatch(new_x, new_y, old_x, old_y)
 
             self.players[self._current_player_index].addToScore(score)
-
 
 
     def _level_complete(self) -> bool:
@@ -130,7 +139,7 @@ class Bejeweled(Game) :
         Swaps adjacent Gems within the Grid.
         '''
         if self._isValidSwap(gem1_x, gem1_y, gem2_x, gem2_y):
-            self._grid[gem1_x][gem1_y], self._grid[gem2_x][gem2_y] = self._grid[gem2_x][gem2_y], self._grid[gem1_x][gem1_y]
+            self.grid.matrix[gem1_x][gem1_y], self.grid.matrix[gem2_x][gem2_y] = self.grid.matrix[gem2_x][gem2_y], self.grid.matrix[gem1_x][gem1_y]
         else:
             print("Invalid swap, try again.")
             self._clicked_gems_coordinates = []
@@ -378,34 +387,5 @@ if __name__ == "__main__":
     bj = Bejeweled(players)
     bj.populateInitialGrid()
     # bj.printGrid()
-    CreateGrid.run(bj.BEJEWELED_ROWS, bj.BEJEWELED_COLS, bj.makeLower(bj.grid.matrix))
-
-    # window = tk.Tk()
-    # GRID_WIDTH = 500;
-    # GRID_HEIGHT = 300;
-
-    # # These can be changed to work with Grid
-    # # i.e. COL = Grid.getCols()
-    # COL = 10;
-    # ROWS = 6;
-
-    # # Leave these for clarity
-    # BLOCK_W = GRID_WIDTH/COL
-    # BLOCK_H = GRID_HEIGHT/ROWS
-
-    # LINE_WIDTH = .5
-
-    # canvas = CreateGrid.draw_grid(window, GRID_WIDTH, GRID_HEIGHT, COL, ROWS, LINE_WIDTH)
-
-    # window.mainloop()
-    # CreateGrid.fill_canvas(bj.grid.matrix, canvas)
-
-
-
-    # # # Sample matrix that has some sample colors
-    # # # If the game has a matrix with colors, this can also be returned
-    # # matrix_arr = [["white","black","blue", "red", "purple"],
-    # #               ["red","orange","white","yellow","white"],
-    # #               ["orange","white","pink","purple","blue"]]
-    
-    # #fill_canvas(matrix_arr, canvas, BLOCK_W, BLOCK_H)
+    gui = GridGUI.GridGUI()
+    gui.run(bj.BEJEWELED_ROWS, bj.BEJEWELED_COLS, bj.makeLower(bj.grid.matrix), bj)

@@ -14,10 +14,11 @@ class Game(ABC):
         This is the template method for all TMGs. It outlines the general game loop
         that each TMG should follow.
         '''
-        self.populate_initial_grid()
+        self.populateInitialGrid()
+        self.printInstructions()
         while(not self.endGame()):
-            user_input = self.takeUserInput()
-            self.processUserInput(user_input)
+            #user_input = self.takeUserInput()
+            self.processUserInput()
             self.checkMatch() # update score if necessary inside this method
             self.displayPlayerScore()
             # update display ~ updated within various functions too?
@@ -26,11 +27,10 @@ class Game(ABC):
     # TODO: Add a method that displays which player is playing and the scores 
             # ^ feels like it can be done concretely, but players info is stored in concrete Game child classes :(
     
-    '''
-    if concrete, do it like this:
-    def displayPlayerScore(self):
-        print(f"{self.players[self._current_player_index].getName()}'s score: {self.players[self._current_player_index].getScore()}")
-    '''
+    @abstractmethod
+    def printInstructions(self):
+        pass
+
     @abstractmethod
     def displayPlayerScore(self):
         pass
@@ -43,9 +43,9 @@ class Game(ABC):
     def addNewPieces(self):
         pass
     
-    def takeUserInput(self):
-        user_input = input()
-        return user_input
+    # def takeUserInput(self):
+    #     user_input = input()
+    #     return user_input
 
     @abstractmethod    
     def processUserInput(self, user_input):
@@ -58,6 +58,7 @@ class Game(ABC):
     @abstractmethod
     def checkMatch(self):
         pass
+
 
     
     
