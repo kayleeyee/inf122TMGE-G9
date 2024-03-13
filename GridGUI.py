@@ -1,6 +1,6 @@
 import tkinter as tk
 
-# Grid GUI
+# Grid GUI/ Game GUI??
 class GridGUI:
     WINDOW = None
     CANVAS = None

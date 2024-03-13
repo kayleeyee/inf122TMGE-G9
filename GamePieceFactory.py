@@ -1,6 +1,7 @@
 from Color import Color
 from GamePiece import GamePiece
 
+# no longer needed
 class GamePieceFactory:
     def createGamePiece(c : Color):
         '''

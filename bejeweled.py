@@ -21,18 +21,20 @@ class Bejeweled(Game) :
     def __init__(self, players):
         self.grid = Grid(self.BEJEWELED_ROWS, self.BEJEWELED_COLS)
         self.players = players
-        self.current_player_index = 0 # so you know who to give points to?
+        self._current_player_index = 0 # so you know who to give points to?
         self._match_coordinates = []
         self._colors = list(Color)[:self.BEJEWELED_COLORS] 
         # Kele added:
         self._clicked_gems_coordinates = []
 
+
     def printInstructions(self):
         '''
         Prints instructions on how to play Bejeweled to the player's terminal
         '''
-        instructions = 'Welcome to Bejeweled!\nTo play this game, '
+        instructions = 'Welcome to Bejeweled!\nTo play this game, click on any two adjacent gems to make a 3-5 gem match!\nIf you need to shuffle the board, press "s"'
         print(instructions)
+    
     
     def displayPlayerScore(self):
         print(f"{self.players[self._current_player_index].getName()}'s score: {self.players[self._current_player_index].getScore()}")
@@ -59,7 +61,7 @@ class Bejeweled(Game) :
 
         # add score to current player!
         score = self._checkGridMatch() 
-        self.players[self.current_player_index].addToScore(score)
+        self.players[self._current_player_index].addToScore(score)
 
 
     def processUserInput(self, j, i):
@@ -72,6 +74,8 @@ class Bejeweled(Game) :
             new_x = self._clicked_gems_coordinates[1].x
             new_y = self._clicked_gems_coordinates[1].y
             self._swapGems(old_x, old_y, new_x, new_y)
+            self.checkMatch()
+            self.displayPlayerScore()
     
 
     def endGame(self) -> bool:
@@ -79,7 +83,7 @@ class Bejeweled(Game) :
         Indicates whether the game is over or not.
         '''
         if self._level_complete:
-            self.current_player_index += 1
+            self._current_player_index += 1
             return True
 
         return False
@@ -99,14 +103,18 @@ class Bejeweled(Game) :
 
             score = self._checkMoveMatch(new_x, new_y, old_x, old_y)
 
+            # update player score
             self.players[self._current_player_index].addToScore(score)
+
+            # empty clicked gems
+            self._clicked_gems_coordinates = []
 
 
     def _level_complete(self) -> bool:
         '''
         Ends Bejeweled game for the Player if they achieved/passed the level's score requirement.
         '''
-        return self.players[self.current_player_index].score >= self.BEJEWELED_LEVEL_1
+        return self.players[self._current_player_index].score >= self.BEJEWELED_LEVEL_1
 
 
     def _isValidSwap(self, gem1_x, gem1_y, gem2_x, gem2_y):
@@ -125,10 +133,10 @@ class Bejeweled(Game) :
         # when gems are in the same column
         elif gem1_y == gem2_y:
             # if gem2 is to the above of gem1
-            if (gem2_x - 1) == gem1_y:
+            if (gem2_x - 1) == gem1_x:
                 return True
             # if gem2 is to the below of gem1
-            elif (gem2_x + 1) == gem1_y:
+            elif (gem2_x + 1) == gem1_x:
                 return True
 
         # all other cases: invalid swap
@@ -219,18 +227,9 @@ class Bejeweled(Game) :
                 points_scored += self.BEJEWELED_5_MATCH
             
             self._removeMatch()
-            # move pieces above down/add new pieces
-
-            # DEBUG
-            print('before move down: ROW MATCH', self._match_coordinates)
-            self.printGrid()
             self._movePiecesDown()
-            print('after move down: ROW MATCH')
-            self.printGrid()
             self.addNewPieces()
-            print('after repopulating: ROW MATCH')
-            self.printGrid()
-            
+
         return points_scored
 
 
@@ -254,17 +253,8 @@ class Bejeweled(Game) :
                 points_scored += self.BEJEWELED_5_MATCH
 
             self._removeMatch()
-            # move pieces above down/add new pieces
-
-            # DEBUG
-            print('before move down: COLUMN MATCH', self._match_coordinates)
-            self.printGrid()
             self._movePiecesDown()
-            print('after move down: COLUMN MATCH')
-            self.printGrid()
             self.addNewPieces()
-            print('after repopulating: COLUMN MATCH')
-            self.printGrid()
 
         return points_scored
 
@@ -378,7 +368,7 @@ class Bejeweled(Game) :
                 # print(self.grid.matrix[row][column].name.lower())
                 row_matrix.append(self.grid.matrix[row][column].name.lower())
             new_matrix.append(row_matrix)
-        print(new_matrix)
+        # print(new_matrix)
         return new_matrix
 
 

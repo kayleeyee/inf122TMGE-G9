@@ -1,6 +1,6 @@
 from Color import Color
 
-
+# no longer used
 class GamePiece:
     next_id = 0
     def  __init__(self, color : Color) -> None:
