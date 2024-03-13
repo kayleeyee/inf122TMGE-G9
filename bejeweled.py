@@ -2,7 +2,7 @@ from Grid import Grid
 from game import Game
 from Color import Color
 from player import Player
-import GridGUI
+from BejeweledGridGUI import BejeweledGridGUI
 import random
 
 from collections import namedtuple
@@ -377,5 +377,5 @@ if __name__ == "__main__":
     bj = Bejeweled(players)
     bj.populateInitialGrid()
     # bj.printGrid()
-    gui = GridGUI.GridGUI()
+    gui = BejeweledGridGUI()
     gui.run(bj.BEJEWELED_ROWS, bj.BEJEWELED_COLS, bj.makeLower(bj.grid.matrix), bj)
