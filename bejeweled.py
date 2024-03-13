@@ -16,15 +16,14 @@ class Bejeweled(Game) :
     BEJEWELED_3_MATCH = 10
     BEJEWELED_4_MATCH = 20
     BEJEWELED_5_MATCH = 30
-    BEJEWELED_LEVEL_1 = 500
+    BEJEWELED_LEVEL_1 = 50
 
     def __init__(self, players):
         self.grid = Grid(self.BEJEWELED_ROWS, self.BEJEWELED_COLS)
         self.players = players
-        self._current_player_index = 0 # so you know who to give points to?
+        self._current_player_index = 0
         self._match_coordinates = []
         self._colors = list(Color)[:self.BEJEWELED_COLORS] 
-        # Kele added:
         self._clicked_gems_coordinates = []
 
 
@@ -61,7 +60,7 @@ class Bejeweled(Game) :
 
         # add score to current player!
         score = self._checkGridMatch() 
-        self.players[self._current_player_index].addToScore(score)
+        return score
 
 
     def processUserInput(self, j, i):
@@ -76,14 +75,27 @@ class Bejeweled(Game) :
             self._swapGems(old_x, old_y, new_x, new_y)
             self.checkMatch()
             self.displayPlayerScore()
-    
+            self.endGame()
+                
 
     def endGame(self) -> bool:
         '''
         Indicates whether the game is over or not.
         '''
+        if self._current_player_index == len(self.players):
+            # print winner/scores
+            exit()
+
         if self._level_complete:
+            # end game for current player
+            print(f'\nGAME OVER for {self.players[self._current_player_index].getName()}\n')
             self._current_player_index += 1
+
+            # if there are players left, start their game
+            if self._current_player_index < len(self.players):
+                print(f'\nSTART GAME for {self.players[self._current_player_index].getName()}\n')
+                self.populateInitialGrid()
+
             return True
 
         return False
@@ -228,7 +240,7 @@ class Bejeweled(Game) :
             
             self._removeMatch()
             self._movePiecesDown()
-            self.addNewPieces()
+            points_scored += self.addNewPieces()
 
         return points_scored
 
@@ -254,7 +266,7 @@ class Bejeweled(Game) :
 
             self._removeMatch()
             self._movePiecesDown()
-            self.addNewPieces()
+            points_scored += self.addNewPieces()
 
         return points_scored
 
@@ -377,5 +389,5 @@ if __name__ == "__main__":
     bj = Bejeweled(players)
     bj.populateInitialGrid()
     # bj.printGrid()
-    gui = BejeweledGridGUI()
-    gui.run(bj.BEJEWELED_ROWS, bj.BEJEWELED_COLS, bj.makeLower(bj.grid.matrix), bj)
+    gui = BejeweledGridGUI(bj.makeLower(bj.grid.matrix), bj)
+    gui.run()

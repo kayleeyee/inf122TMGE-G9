@@ -76,5 +76,9 @@ class GridGUI(ABC):
                 canvas.create_rectangle(x,y,x+b_width,y+b_height, fill=color, outline = "black")    
 
     @abstractmethod
-    def run(self, num_rows, num_cols, matrix, game_object):
+    def run(self):
         pass
+
+    # used to be: (but moved that info to be stored in the individual GUI class)
+    # def run(self, num_rows, num_cols, matrix, game_object):
+    #    pass
