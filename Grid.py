@@ -25,9 +25,14 @@ class Grid:
     def update(self) -> None:
         pass
     
-    #Getter and setter ?
-    def setMatrix(self) -> None:
-        pass
+
+    def getCols(self):
+        return len(self.matrix[0])
+
+
+    def getRows(self):
+        return len(self.matrix)
+    
     
     def getMatrix(self):
         return self.matrix

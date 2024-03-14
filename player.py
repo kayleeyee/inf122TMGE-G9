@@ -13,5 +13,11 @@ class Player():
         self.score = 0
 
     # Increase or decrease the score
-    def add_to_score(self, num : int) -> None:
+    def addToScore(self, num : int) -> None:
         self.score += num
+
+    def getName(self):
+        return self.username
+    
+    def getScore(self):
+        return self.score
