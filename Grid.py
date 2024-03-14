@@ -11,7 +11,7 @@ class Grid:
         for row in range(rows):
             row_matrix =  []
             for column in range(columns):
-                row_matrix.append(Color("COLORLESS")) 
+                row_matrix.append(Color("BLACK")) 
             self.matrix.append(row_matrix)
     
     def return_grid(self):

@@ -55,7 +55,7 @@ class Bejeweled(Game) :
         # checks every grid square, if the grid square is empty, fill it with a new piece
         for i in range(self.BEJEWELED_ROWS):
             for j in range(self.BEJEWELED_COLS):
-                if self.grid.matrix[i][j] == Color.COLORLESS:
+                if self.grid.matrix[i][j] == Color.BLACK:
                     self.grid.matrix[i][j] = random.choice(self._colors)
 
         # add score to current player!
@@ -216,7 +216,7 @@ class Bejeweled(Game) :
         Removes valid matches from the Grid based on the coordinates found in 
         '''
         for coord in self._match_coordinates:
-            self.grid.matrix[coord.x][coord.y] = Color.COLORLESS
+            self.grid.matrix[coord.x][coord.y] = Color.BLACK
 
 
     def _checkRowMatch(self, x, y):
@@ -280,8 +280,8 @@ class Bejeweled(Game) :
         match_length = 1
         col_position = y
         
-        # don't proceed if current cell is COLORLESS
-        if gem_color == Color.COLORLESS:
+        # don't proceed if current cell is BLACK
+        if gem_color == Color.BLACK:
             return match_length
 
         # Checking gem to the right
@@ -312,8 +312,8 @@ class Bejeweled(Game) :
         match_length = 1
         row_position = x
 
-        # don't proceed if current cell is COLORLESS
-        if gem_color == Color.COLORLESS:
+        # don't proceed if current cell is BLACK
+        if gem_color == Color.BLACK:
             return match_length
         
         # Checking above the gem
@@ -361,7 +361,7 @@ class Bejeweled(Game) :
                 # Move the piece down by one position
                 self.grid.matrix[r][col] = self.grid.matrix[r - 1][col]
             # Set the topmost piece in the column to None
-            self.grid.matrix[0][col] = Color.COLORLESS
+            self.grid.matrix[0][col] = Color.BLACK
 
 
     def printGrid(self):

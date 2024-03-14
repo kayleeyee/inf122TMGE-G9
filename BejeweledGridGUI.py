@@ -1,5 +1,3 @@
-# BejeweledGridGUI.py
-# by Kaylee and Kele
 import tkinter as tk
 from GridGUI import GridGUI
 

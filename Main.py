@@ -72,10 +72,9 @@ def run():
     # For now this is an array of str, might make game obj possibly
     games = ["Tetris", "Bejewled"] 
 
-    #players = login()
-    #display_games(games)
-    print("Main")
-    game = Tetris([player.Player("1"), player.Player("2")])
+    players = login()
+    display_games(games)
+    game = select_game()
 
     # Maybe we could do something like
     # new_game = Game(game)

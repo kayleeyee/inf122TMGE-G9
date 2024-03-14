@@ -7,5 +7,5 @@ class Color(Enum):
     WHITE = "WHITE"
     GREEN = "GREEN"
     YELLOW = "YELLOW"
-    ORANGE = "ORANGE" 
-    COLORLESS = "COLORLESS"
+    ORANGE = "ORANGE"
+    BLACK = "BLACK"
