@@ -95,17 +95,17 @@ class Tetris(Game):
         return False
     
     def processUserInput(self, user_input):
-        match user_input:
-            case 'w':
-                self._rotate()
-            case 's':
-                self._move_down()
-            case 'd':
-                self._move_right()
-            case 'a':
-                self._move_left()
-            case _:
-                print("Not a Valid Input Please only type: w, s, d or a")
+        
+        if user_input == 'w':
+            self._rotate()
+        elif user_input == 's':
+            self._move_down()
+        elif user_input == 'd':
+            self._move_right()
+        elif user_input ==  'a':
+            self._move_left()
+        else:
+            print("Not a Valid Input Please only type: w, s, d or a")
  
     def endGame(self) -> bool:
         '''
