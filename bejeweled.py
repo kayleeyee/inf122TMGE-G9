@@ -27,6 +27,14 @@ class Bejeweled(Game) :
         self._clicked_gems_coordinates = []
 
 
+    def runGame(self, players):
+        bj = Bejeweled(players)
+        bj.populateInitialGrid()
+        bj.printInstructions()
+        gui = BejeweledGridGUI(bj.makeLower(bj.grid.matrix), bj)
+        gui.run()
+
+
     def printInstructions(self):
         '''
         Prints instructions on how to play Bejeweled to the player's terminal
@@ -391,9 +399,10 @@ class Bejeweled(Game) :
 
 if __name__ == "__main__":
     players = [Player('p1'), Player('p2')]
-    bj = Bejeweled(players)
-    bj.populateInitialGrid()
-    bj.printInstructions()
-    # bj.printGrid()
-    gui = BejeweledGridGUI(bj.makeLower(bj.grid.matrix), bj)
-    gui.run()
+    Bejeweled.runGame(players)
+    # bj = Bejeweled(players)
+    # bj.populateInitialGrid()
+    # bj.printInstructions()
+    # # bj.printGrid()
+    # gui = BejeweledGridGUI(bj.makeLower(bj.grid.matrix), bj)
+    # gui.run()
