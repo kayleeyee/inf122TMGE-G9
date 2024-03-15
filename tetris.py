@@ -111,9 +111,8 @@ class Tetris(Game):
         '''
         Check when to end game. Game is done when player's index is over the number of players
         '''
-        if self.current_player_index >= len(self.players):
-            return True
-        return False
+        self.gui.window.destroy()
+        #exit()
     
     def checkMatch(self):
         '''
@@ -150,18 +149,23 @@ class Tetris(Game):
             self.grid.matrix = empty_rows+rows_kept
 
             self.players[self.current_player_index].addToScore(len(rows_to_delete)*10)
-
-        if self.last_move == "down":
-            self._handle_player()
         
-    def _handle_player(self):
+        self.displayPlayerScore()
+        
+        if self.last_move == "down":
+            self._handle_move_down()
+        
+    def _handle_move_down(self):
         '''
         Increase the index of current_player_index if the current player's game is finished
         '''
         if self.addNewPieces() == False or self._check_score_complete():
                 self.current_player_index += 1
-                self.grid = Grid(self.TETRIS_ROWS, self.TETRIS_COLS)
-                self.populate_initial_grid()
+                if(self.current_player_index < len(self.players)):
+                    self.grid = Grid(self.TETRIS_ROWS, self.TETRIS_COLS)
+                    self.populateInitialGrid()
+                else:
+                    self.endGame()
     
     def _rotate(self):
         '''
@@ -311,9 +315,7 @@ class Tetris(Game):
         # print(new_matrix)
         return new_matrix
     
-if __name__ == "__main__":
-    players = [Player('p1'), Player('p2')]
-    tetris = Tetris(players)
-    tetris.populateInitialGrid()
-    gui = TetrisGridGUI(tetris.makeLower(), tetris)
-    gui.run()
+    def runGame(self):
+        self.populateInitialGrid()
+        self.gui = TetrisGridGUI(self.makeLower(), self)
+        self.gui.run()

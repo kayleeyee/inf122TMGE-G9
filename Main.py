@@ -6,6 +6,8 @@
 # in run()
 
 import player
+import tetris
+import bejeweled
 
 # Helper function to print the number of options
 def _print_options(num : int) -> None:
@@ -70,16 +72,17 @@ def select_game() -> str:
 
 def run():
     # For now this is an array of str, might make game obj possibly
-    games = ["Tetris", "Bejewled"] 
+    games = ["Tetris", "Bejeweled"] 
 
     players = login()
     display_games(games)
-    game = select_game()
+    game_selection = select_game()
+    if(game_selection == "1"):
+        game = tetris.Tetris(players)
+    elif(game_selection == "2"):
+        game = bejeweled.Bejeweled(players)
 
-    # Maybe we could do something like
-    # new_game = Game(game)
-    # new_game.start() ??
-    # This moreso depends on how we decide to implement it tho
+    game.runGame()
 
 if __name__ == "__main__":
     run()

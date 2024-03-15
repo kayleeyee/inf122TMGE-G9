@@ -25,6 +25,14 @@ class Bejeweled(Game) :
         self._match_coordinates = []
         self._colors = list(Color)[:self.BEJEWELED_COLORS] 
         self._clicked_gems_coordinates = []
+        self._gui = None
+
+
+    def runGame(self):
+        self.populateInitialGrid()
+        self.printInstructions()
+        self._gui = BejeweledGridGUI(self.makeLower(self.grid.matrix), self)
+        self._gui.run()
 
 
     def printInstructions(self):
@@ -82,11 +90,7 @@ class Bejeweled(Game) :
         '''
         Indicates whether the game is over or not.
         '''
-        if self._current_player_index == len(self.players):
-            # print winner/scores
-            exit()
-
-        if self._level_complete:
+        if self._level_complete():
             # end game for current player
             print(f'\nGAME OVER for {self.players[self._current_player_index].getName()}\n')
             self._current_player_index += 1
@@ -95,10 +99,20 @@ class Bejeweled(Game) :
             if self._current_player_index < len(self.players):
                 print(f'\nSTART GAME for {self.players[self._current_player_index].getName()}\n')
                 self.populateInitialGrid()
+        
 
-            return True
+        if self._current_player_index == len(self.players):
+            # print winner/scores
+            high_score = max(self.players, key=lambda player: player.score).score
+            high_score_username = max(self.players, key=lambda player: player.score).username
+            
+            print(high_score_username)
+            print(high_score)
+            print(f'The winner is {high_score_username} with the score: {high_score}!')
 
-        return False
+            # terminate game
+            exit()
+
 
 
     def checkMatch(self):
