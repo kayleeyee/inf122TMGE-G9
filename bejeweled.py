@@ -86,7 +86,7 @@ class Bejeweled(Game) :
             # print winner/scores
             exit()
 
-        if self._level_complete:
+        if self._level_complete():
             # end game for current player
             print(f'\nGAME OVER for {self.players[self._current_player_index].getName()}\n')
             self._current_player_index += 1
