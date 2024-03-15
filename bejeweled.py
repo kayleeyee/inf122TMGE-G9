@@ -380,7 +380,7 @@ class Bejeweled(Game) :
             self.grid.matrix[0][col] = Color.BLACK
 
 
-    def printGrid(self):
+    def _printGrid(self):
         for r in range(self.BEJEWELED_ROWS):
             new_row = []
             for c in range(self.BEJEWELED_COLS):
