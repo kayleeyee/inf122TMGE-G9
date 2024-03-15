@@ -64,7 +64,7 @@ class Tetris(Game):
         print(instructions)
     
     def displayPlayerScore(self):
-        print(f"{self.players[self.current_player_index].getName()}'s score: {self.players[self.current_player_index].getScore()}")
+        print(self.players[self.current_player_index])
         
     def populateInitialGrid(self):
         '''

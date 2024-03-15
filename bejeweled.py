@@ -3,6 +3,9 @@ from game import Game
 from Color import Color
 from player import Player
 from BejeweledGridGUI import BejeweledGridGUI
+from GamePiece import GamePiece
+from GamePieceFactory import GamePieceFactory as GPF
+import MatchStrategy as MS
 import random
 
 from collections import namedtuple
@@ -44,7 +47,10 @@ class Bejeweled(Game) :
     
     
     def displayPlayerScore(self):
-        print(f"{self.players[self._current_player_index].getName()}'s score: {self.players[self._current_player_index].getScore()}")
+        '''
+        Displays the current Player's score.
+        '''
+        print(self.players[self._current_player_index])
 
 
     def populateInitialGrid(self):
@@ -55,16 +61,16 @@ class Bejeweled(Game) :
         '''
         for i in range(self.BEJEWELED_ROWS):
             for j in range(self.BEJEWELED_COLS):
-                self.grid.matrix[i][j] = random.choice(self._colors)
+                self.grid.matrix[i][j] = GPF.createGamePiece(random.choice(self._colors))
         self._checkGridMatch() # clear board of matches, don't care about the score generated
 
 
     def addNewPieces(self):
-        # checks every grid square, if the grid square is empty, fill it with a new piece
+        # checks every GamePiece in the Grid, if the grid square is "empty" (Color is Color.BLACK), fill it with a new GamePiece
         for i in range(self.BEJEWELED_ROWS):
             for j in range(self.BEJEWELED_COLS):
-                if self.grid.matrix[i][j] == Color.BLACK:
-                    self.grid.matrix[i][j] = random.choice(self._colors)
+                if self.grid.matrix[i][j].getPieceType() == Color.BLACK:
+                    self.grid.matrix[i][j] = GPF.createGamePiece(random.choice(self._colors))
 
         # add score to current player!
         score = self._checkGridMatch() 
@@ -88,7 +94,7 @@ class Bejeweled(Game) :
             self.endGame()
                 
 
-    def endGame(self) -> bool:
+    def endGame(self):
         '''
         Indicates whether the game is over or not.
         '''
@@ -114,7 +120,6 @@ class Bejeweled(Game) :
 
             # terminate game
             exit()
-
 
 
     def checkMatch(self):
@@ -232,7 +237,7 @@ class Bejeweled(Game) :
         Removes valid matches from the Grid based on the coordinates found in 
         '''
         for coord in self._match_coordinates:
-            self.grid.matrix[coord.x][coord.y] = Color.BLACK
+            self.grid.matrix[coord.x][coord.y] = GPF.createGamePiece(Color.BLACK)
 
 
     def _checkRowMatch(self, x, y):
@@ -292,7 +297,7 @@ class Bejeweled(Game) :
         Returns the length of the horizontal "Match" made from the current coordinate in the Grid.
         If the value returned is 3+, there is a vertical match.
         '''
-        gem_color = self.grid.matrix[x][y]
+        gem_color = self.grid.matrix[x][y].getPieceType()
         match_length = 1
         col_position = y
         
@@ -324,7 +329,7 @@ class Bejeweled(Game) :
         Returns the length of the vertical "Match" made from the current coordinate in the Grid.
         If the value returned is 3+, there is a vertical match.
         '''
-        gem_color = self.grid.matrix[x][y]
+        gem_color = self.grid.matrix[x][y].getPieceType()
         match_length = 1
         row_position = x
 
@@ -363,7 +368,7 @@ class Bejeweled(Game) :
         if y < 0 or y >= self.BEJEWELED_COLS:
             return False
 
-        return gem_color == self.grid.matrix[x][y]
+        return gem_color == self.grid.matrix[x][y].getPieceType()
 
         
     def _movePiecesDown(self):
@@ -377,33 +382,30 @@ class Bejeweled(Game) :
                 # Move the piece down by one position
                 self.grid.matrix[r][col] = self.grid.matrix[r - 1][col]
             # Set the topmost piece in the column to None
-            self.grid.matrix[0][col] = Color.BLACK
+            self.grid.matrix[0][col] = GPF.createGamePiece(Color.BLACK)
 
 
     def _printGrid(self):
         for r in range(self.BEJEWELED_ROWS):
             new_row = []
             for c in range(self.BEJEWELED_COLS):
-                new_row.append(self.grid.matrix[r][c].name)
+                new_row.append(self.grid.matrix[r][c].getPieceStr())
             print(new_row)
 
+    # getStrMatrix??
     def makeLower(self, matrix):
-        new_matrix = []
+        str_matrix = []
 
         for row in range(self.BEJEWELED_ROWS):
             row_matrix =  []
             for column in range(self.BEJEWELED_COLS):
-                # print(self.grid.matrix[row][column].name.lower())
-                row_matrix.append(self.grid.matrix[row][column].name.lower())
-            new_matrix.append(row_matrix)
-        # print(new_matrix)
-        return new_matrix
+                row_matrix.append(self.grid.matrix[row][column].getPieceStr())
+            str_matrix.append(row_matrix)
+
+        return str_matrix
 
 
 if __name__ == "__main__":
     players = [Player('p1'), Player('p2')]
     bj = Bejeweled(players)
-    bj.populateInitialGrid()
-    # bj.printGrid()
-    gui = BejeweledGridGUI(bj.makeLower(bj.grid.matrix), bj)
-    gui.run()
+    bj.runGame()

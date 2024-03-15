@@ -1,4 +1,5 @@
-from GridSquare import GridSquare
+from GamePiece import GamePiece
+from GamePieceFactory import GamePieceFactory as GPF
 from Color import Color
 
 
@@ -11,17 +12,18 @@ class Grid:
         for row in range(rows):
             row_matrix =  []
             for column in range(columns):
-                row_matrix.append(Color("BLACK")) 
+                row_matrix.append(GPF.createGamePiece(Color.BLACK)) 
             self.matrix.append(row_matrix)
     
+    # NOT NEEDED (just access directly using grid.matrix)
     def return_grid(self):
         return self.matrix
     
-    
+    # For debugging purposes?
     def display(self) -> None:
         print(self.matrix)
 
-
+    # don't need
     def update(self) -> None:
         pass
     
@@ -33,10 +35,7 @@ class Grid:
     def getRows(self):
         return len(self.matrix)
     
-    
-    def getMatrix(self):
-        return self.matrix
-        
+
 
 
     
