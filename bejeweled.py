@@ -82,11 +82,7 @@ class Bejeweled(Game) :
         '''
         Indicates whether the game is over or not.
         '''
-        if self._current_player_index == len(self.players):
-            # print winner/scores
-            exit()
-
-        if self._level_complete:
+        if self._level_complete():
             # end game for current player
             print(f'\nGAME OVER for {self.players[self._current_player_index].getName()}\n')
             self._current_player_index += 1
@@ -95,10 +91,19 @@ class Bejeweled(Game) :
             if self._current_player_index < len(self.players):
                 print(f'\nSTART GAME for {self.players[self._current_player_index].getName()}\n')
                 self.populateInitialGrid()
+        
+        if self._current_player_index == len(self.players):
+            # print winner/scores
+            high_score = max(self.players, key=lambda player: player.score).score
+            high_score_username = max(self.players, key=lambda player: player.score).username
+            
+            print(high_score_username)
+            print(high_score)
+            print(f'The winner is {high_score_username} with the score: {high_score}!')
 
-            return True
+            # terminate game
+            exit()
 
-        return False
 
 
     def checkMatch(self):
@@ -388,6 +393,7 @@ if __name__ == "__main__":
     players = [Player('p1'), Player('p2')]
     bj = Bejeweled(players)
     bj.populateInitialGrid()
+    bj.printInstructions()
     # bj.printGrid()
     gui = BejeweledGridGUI(bj.makeLower(bj.grid.matrix), bj)
     gui.run()

@@ -23,9 +23,6 @@ class Game(ABC):
             self.displayPlayerScore()
             # update display ~ updated within various functions too?
     
-    # TODO: Need to add a method that sends the grid to the GUI to update display
-    # TODO: Add a method that displays which player is playing and the scores 
-            # ^ feels like it can be done concretely, but players info is stored in concrete Game child classes :(
     
     @abstractmethod
     def printInstructions(self):

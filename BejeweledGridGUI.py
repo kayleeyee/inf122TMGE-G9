@@ -25,9 +25,6 @@ class BejeweledGridGUI(GridGUI):
         
         self.fill_canvas(self.matrix, self.canvas, self.block_w, self.block_h)
 
-        #DEBUG:
-        print("Coordinate:",j, i)
-
 
     def onKeyPress(self, event):
         if event.keysym == 's':
