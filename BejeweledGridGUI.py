@@ -20,13 +20,10 @@ class BejeweledGridGUI(GridGUI):
     def detectClick(self, x: int, y: int, b_width, b_height):
         i, j = self.canvas_to_matrix(x, y, b_width, b_height)
 
-        self.bejeweled_obj.processUserInput(j, i)
+        self.bejeweled_obj.processUserInput((j, i))
         self.matrix = self.bejeweled_obj.makeLower(self.bejeweled_obj.grid.matrix)
         
         self.fill_canvas(self.matrix, self.canvas, self.block_w, self.block_h)
-
-        #DEBUG:
-        print("Coordinate:",j, i)
 
 
     def onKeyPress(self, event):

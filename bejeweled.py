@@ -71,9 +71,11 @@ class Bejeweled(Game) :
         return score
 
 
-    def processUserInput(self, j, i):
-        if Coordinate(j, i) not in self._clicked_gems_coordinates and len(self._clicked_gems_coordinates) < 2:
-            self._clicked_gems_coordinates.append(Coordinate(j, i))
+    def processUserInput(self, user_input):
+        # Extra error check
+        if type(user_input) == tuple:
+            if Coordinate(user_input[0], user_input[1]) not in self._clicked_gems_coordinates and len(self._clicked_gems_coordinates) < 2:
+                self._clicked_gems_coordinates.append(Coordinate(user_input[0], user_input[1]))
         
         if len(self._clicked_gems_coordinates) == 2:
             old_x = self._clicked_gems_coordinates[0].x
@@ -90,7 +92,7 @@ class Bejeweled(Game) :
         '''
         Indicates whether the game is over or not.
         '''
-        if self._level_complete():
+        if self._levelComplete():
             # end game for current player
             print(f'\nGAME OVER for {self.players[self._current_player_index].getName()}\n')
             self._current_player_index += 1
@@ -136,7 +138,7 @@ class Bejeweled(Game) :
             self._clicked_gems_coordinates = []
 
 
-    def _level_complete(self) -> bool:
+    def _levelComplete(self) -> bool:
         '''
         Ends Bejeweled game for the Player if they achieved/passed the level's score requirement.
         '''
