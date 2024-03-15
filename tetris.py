@@ -316,6 +316,7 @@ class Tetris(Game):
         return new_matrix
     
     def runGame(self):
+        self.printInstructions()
         self.populateInitialGrid()
         self.gui = TetrisGridGUI(self.makeLower(), self)
         self.gui.run()
