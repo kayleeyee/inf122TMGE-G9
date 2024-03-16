@@ -23,4 +23,4 @@ class Player():
         return self.score
     
     def __str__(self):
-        return f"Player {self.name}: {self.score}"
+        return f"Player {self.username}: {self.score}"

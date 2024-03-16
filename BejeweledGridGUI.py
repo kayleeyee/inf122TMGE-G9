@@ -28,7 +28,6 @@ class BejeweledGridGUI(GridGUI):
 
     def onKeyPress(self, event):
         if event.keysym == 's':
-            print("'s' key pressed")
             self.bejeweled_obj.populateInitialGrid()
             self.matrix = self.bejeweled_obj.makeLower(self.bejeweled_obj.grid.matrix)
             self.fill_canvas(self.matrix, self.canvas, self.block_w, self.block_h)
@@ -36,8 +35,6 @@ class BejeweledGridGUI(GridGUI):
 
     def run(self):
         self.window = tk.Tk()
-
-        # Leave these for clarity
 
         self.canvas = self.draw_grid(self.window, self.GRID_WIDTH, self.GRID_HEIGHT, self.cols, self.rows, self.LINE_WIDTH) # Draw Grid
 

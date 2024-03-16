@@ -12,14 +12,15 @@ from collections import namedtuple
 Coordinate = namedtuple('Coordinate', ['x', 'y'])
 
 class Bejeweled(Game) :
-    GAME_NAME = 'Bejeweled'
+    BEJEWELED_HORIZONAL_MATCH = MS.LocalHMatchStrategy()
+    BEJEWELED_VERTICAL_MATCH = MS.LocalVMatchStrategy()
     BEJEWELED_ROWS = 8
     BEJEWELED_COLS = 8
     BEJEWELED_COLORS = 7
     BEJEWELED_3_MATCH = 10
     BEJEWELED_4_MATCH = 20
     BEJEWELED_5_MATCH = 30
-    BEJEWELED_LEVEL_1 = 50
+    BEJEWELED_LEVEL_1 = 300
 
     def __init__(self, players):
         self.grid = Grid(self.BEJEWELED_ROWS, self.BEJEWELED_COLS)
@@ -42,7 +43,7 @@ class Bejeweled(Game) :
         '''
         Prints instructions on how to play Bejeweled to the player's terminal
         '''
-        instructions = 'Welcome to Bejeweled!\nTo play this game, click on any two adjacent gems to make a 3-5 gem match!\nIf you need to shuffle the board, press "s"'
+        instructions = f'Welcome to Bejeweled!\nTo play this game, click on any two adjacent gems to make a 3-5 gem match!\nIf you need to shuffle the board, press "s".\nIn order to win the game, you must get at least {self.BEJEWELED_LEVEL_1} points!'
         print(instructions)
     
     
@@ -246,9 +247,9 @@ class Bejeweled(Game) :
         any surrounding pieces down if necessary.
         '''
         points_scored = 0
-        self._match_coordinates = [Coordinate(x, y)]
+        self._match_coordinates = self.BEJEWELED_HORIZONAL_MATCH.match(self.grid, [Coordinate(x,y)])
 
-        match_size = self._rowMatchLength(x, y)
+        match_size = len(self._match_coordinates)
         if match_size >= 3:
             # add points that the player should receive.
             if match_size == 3:
@@ -272,9 +273,9 @@ class Bejeweled(Game) :
         any surrounding pieces down if necessary.
         '''
         points_scored = 0
-        self._match_coordinates = [Coordinate(x, y)]
+        self._match_coordinates = self.BEJEWELED_VERTICAL_MATCH.match(self.grid, [Coordinate(x,y)])
 
-        match_size = self._colMatchLength(x, y)
+        match_size = len(self._match_coordinates)
         if match_size >= 3:
             # add points that the player should receive.
             if match_size == 3:
@@ -290,85 +291,6 @@ class Bejeweled(Game) :
             points_scored += self.addNewPieces()
 
         return points_scored
-
-
-    def _rowMatchLength(self, x, y) -> int:
-        '''
-        Returns the length of the horizontal "Match" made from the current coordinate in the Grid.
-        If the value returned is 3+, there is a vertical match.
-        '''
-        gem_color = self.grid.matrix[x][y].getPieceType()
-        match_length = 1
-        col_position = y
-        
-        # don't proceed if current cell is BLACK
-        if gem_color == Color.BLACK:
-            return match_length
-
-        # Checking gem to the right
-        while self._checkForSameColors(gem_color, x, col_position+1): 
-            self._match_coordinates.append(Coordinate(x, col_position+1))
-            match_length += 1
-            col_position += 1
-        
-        # Setting column position back to the source gem
-        col_position = y
-        
-        # Checking gem to the left
-        while self._checkForSameColors(gem_color, x, col_position-1): 
-            self._match_coordinates.append(Coordinate(x, col_position-1))
-            match_length += 1
-            col_position -= 1
-
-        # Returns the length of the match (not a true match if match_length < 3)
-        return match_length
-
-
-    def _colMatchLength(self, x, y) -> int:
-        '''
-        Returns the length of the vertical "Match" made from the current coordinate in the Grid.
-        If the value returned is 3+, there is a vertical match.
-        '''
-        gem_color = self.grid.matrix[x][y].getPieceType()
-        match_length = 1
-        row_position = x
-
-        # don't proceed if current cell is BLACK
-        if gem_color == Color.BLACK:
-            return match_length
-        
-        # Checking above the gem
-        while (self._checkForSameColors(gem_color, row_position-1, y)):
-            self._match_coordinates.append(Coordinate(row_position-1, y))
-            row_position -= 1
-            match_length += 1
-        
-        # Setting row_position back to the source gem
-        row_position = x
-
-        # Checking below the gem
-        while (self._checkForSameColors(gem_color, row_position+1, y)):
-            self._match_coordinates.append(Coordinate(row_position+1, y))
-            row_position += 1
-            match_length += 1
-            
-        # Returns the length of the match (not a true match if match_length < 3)
-        return match_length
-
-
-    def _checkForSameColors(self, gem_color, x, y) -> bool:
-        '''
-        Checks if the adjacent gems are the same type [x and y are the coordinates of the adjacent gem].
-        Returns False if the coordinates are out of bounds or if the gem colors do not match.
-        Returns True if the gem colors do match!
-        '''
-        # error bounds
-        if x < 0 or x >= self.BEJEWELED_ROWS:
-            return False
-        if y < 0 or y >= self.BEJEWELED_COLS:
-            return False
-
-        return gem_color == self.grid.matrix[x][y].getPieceType()
 
         
     def _movePiecesDown(self):
@@ -392,8 +314,11 @@ class Bejeweled(Game) :
                 new_row.append(self.grid.matrix[r][c].getPieceStr())
             print(new_row)
 
-    # getStrMatrix??
-    def makeLower(self, matrix):
+
+    def makeLower(self, grid : Grid):
+        '''
+        Translates the Grid of GamePiece objects into the Color strings needed for tkinter. 
+        '''
         str_matrix = []
 
         for row in range(self.BEJEWELED_ROWS):
