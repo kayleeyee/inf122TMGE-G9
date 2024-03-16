@@ -47,7 +47,5 @@ class BejeweledGridGUI(GridGUI):
         self.fill_canvas(self.matrix, self.canvas, self.block_w, self.block_h)
 
         self.window.mainloop()
-        # If the game returns end game is true, then I have to stop the main loop
-        # TODO: Look for how to end this
 
 

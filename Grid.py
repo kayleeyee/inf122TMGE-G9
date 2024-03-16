@@ -22,10 +22,6 @@ class Grid:
     # For debugging purposes?
     def display(self) -> None:
         print(self.matrix)
-
-    # don't need
-    def update(self) -> None:
-        pass
     
 
     def getCols(self):
