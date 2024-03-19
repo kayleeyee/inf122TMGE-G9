@@ -46,7 +46,7 @@ class Tetris(Game):
     TETRIS_ROWS = 20
     TETRIS_COLS = 10
     
-    END_GAME_SCORE = 300
+    END_GAME_SCORE = 100
     MATCH_SCORE = 10
 
     piece_keys = list(pieces.keys())
@@ -94,16 +94,16 @@ class Tetris(Game):
             self.current_piece_start_row = start_row
             self.current_piece_start_col = start_col
             
-            for row in range(len(piece)):
-                for col in range(len(piece[row])):
-                    if piece[row][col] == 1:           
-                        self.grid.matrix[start_row + row][start_col + col] = self.current_piece_color
+            for row in range(len(self.current_piece)):
+                for col in range(len(self.current_piece[row])):
+                    if self.current_piece[row][col] == 1:           
+                        self.grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = self.current_piece_color
+            # self.tetris_testing_matrix()
             return True 
 
         return False
     
     def processUserInput(self, user_input):
-        
         if user_input == 'w':
             self._rotate()
         elif user_input == 's':
@@ -154,8 +154,7 @@ class Tetris(Game):
             empty_rows.append(new_row)
         
         self.grid.matrix = empty_rows+rows_kept
-    
-        
+       
     def _handle_move_down(self):
         '''
         Increase the index of current_player_index if the current player's game is finished
@@ -219,6 +218,7 @@ class Tetris(Game):
         
         self.grid = temp_grid
         self.last_move = "down"
+        # self.tetris_testing_matrix()
         self.checkMatch()
 
     def _move_left(self):
@@ -312,8 +312,21 @@ class Tetris(Game):
 
         return str_matrix
     
+    # def tetris_testing_matrix(self):
+    #     for row in range(self.TETRIS_ROWS):
+    #         for col in range(self.TETRIS_COLS):
+    #             print(("| " + self.grid.matrix[row][col].getPieceStr() + " |").center(15), end="")
+    #         print("\n ____________________________________________________________________________")
+    #     print("\n")
+    #     print("\n")
+    
     def runGame(self):
         self.printInstructions()
         self.populateInitialGrid()
         self.gui = TetrisGridGUI(self.makeLower(), self)
         self.gui.run()
+        
+# if __name__ == "__main__":
+#     players = [Player('p1'), Player('p2')]
+#     tet = Tetris(players)
+#     tet.runGame()
