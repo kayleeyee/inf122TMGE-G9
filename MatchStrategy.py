@@ -115,3 +115,21 @@ class LocalVMatchStrategy(MatchStrategy):
             return False
 
         return piece_type == grid.matrix[x][y].getPieceType()
+    
+class HorizontalMatchStrategy(MatchStrategy):
+    def match(self, grid : Grid, coords : list[Coordinate]) -> list[Coordinate]:
+        start_x = coords[0].x
+        end_x = coords[1].x
+        end_y = coords[1].y
+        
+        rows_to_delete = []
+        
+        for row in range(start_x, end_x):
+            row_all_color = True
+            for col in range(end_y):
+                if grid.return_grid()[row][col].getPieceType() == Color.BLACK:
+                    row_all_color = False
+                    break   
+            if row_all_color:
+                rows_to_delete.append(Coordinate(row, 0))
+        return rows_to_delete

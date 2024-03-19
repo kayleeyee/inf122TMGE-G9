@@ -3,9 +3,15 @@ from game import Game
 from Color import Color
 from player import Player
 from TetrisGridGUI import TetrisGridGUI
+from GamePiece import GamePiece
+from GamePieceFactory import GamePieceFactory as GPF
+import MatchStrategy as MS
 
 import random
 import copy
+
+from collections import namedtuple
+Coordinate = namedtuple('Coordinate', ['x', 'y'])
 
 class Tetris(Game):
     pieces = {
@@ -23,22 +29,24 @@ class Tetris(Game):
     "Z": [[1, 1, 0],
         [0, 1, 1]]
     }
-
+    
     color_pieces = {
-        "I" : "RED",
-        "L" : "BLUE",
-        "J" : "YELLOW",
-        "O" : "PURPLE",
-        "S" : "GREEN",
-        "T" : "ORANGE",
-        "Z" : "WHITE" 
+        "I" : GPF.createGamePiece(Color("RED")),
+        "L" : GPF.createGamePiece(Color("BLUE")),
+        "J" : GPF.createGamePiece(Color("YELLOW")),
+        "O" : GPF.createGamePiece(Color("PURPLE")),
+        "S" : GPF.createGamePiece(Color("GREEN")),
+        "T" : GPF.createGamePiece(Color("ORANGE")),
+        "Z" : GPF.createGamePiece(Color("WHITE")),
+        "EMPTY": GPF.createGamePiece(Color("BLACK"))
     }
     
+    TETRIS_HORIZONTAL_MATCH = MS.HorizontalMatchStrategy()
     GAME_NAME = 'Tetris'
     TETRIS_ROWS = 20
     TETRIS_COLS = 10
     
-    END_GAME_SCORE = 30
+    END_GAME_SCORE = 300
     MATCH_SCORE = 10
 
     piece_keys = list(pieces.keys())
@@ -89,7 +97,7 @@ class Tetris(Game):
             for row in range(len(piece)):
                 for col in range(len(piece[row])):
                     if piece[row][col] == 1:           
-                        self.grid.matrix[start_row + row][start_col + col] = Color(self.current_piece_color)
+                        self.grid.matrix[start_row + row][start_col + col] = self.current_piece_color
             return True 
 
         return False
@@ -118,61 +126,56 @@ class Tetris(Game):
         '''
         If the piece is gone down, check for row(s) that are filled with colors and remove the row(s)
         '''
-        rows_to_delete = []
+        coord_list = [Coordinate(self.current_piece_start_row, 0), Coordinate(self.TETRIS_ROWS, self.TETRIS_COLS)]
+        coord_to_delete = self.TETRIS_HORIZONTAL_MATCH.match(self.grid, coord_list)
         
-        for row in range(self.TETRIS_ROWS):
-            row_all_color = True
-            for col in range(self.TETRIS_COLS):
-                if self.grid.return_grid()[row][col] == Color("BLACK"):
-                    row_all_color = False
-                    break   
-            if row_all_color:
-                rows_to_delete.append(row)
-        
-        #if there are row(s) to delete, empty the row
-        if len(rows_to_delete) != 0: 
-
-            self.players[self.current_player_index].addToScore(len(rows_to_delete)*10)
+        if (coord_to_delete != None):
+            rows_to_delete = [coord.x for coord in coord_to_delete]
             
-            rows_kept= []
-            for row in range(self.TETRIS_ROWS):
-                if row not in rows_to_delete:
-                    rows_kept.append(self.grid.return_grid()[row])
+            #if there are row(s) to delete, empty the row
+            if len(rows_to_delete) != 0:
+                self._remove_and_add_rows(rows_to_delete)
+                self.players[self.current_player_index].addToScore(len(rows_to_delete)*10)
 
-            empty_rows = []
-            for empty_row  in range(len(rows_to_delete)):
-                columns_of_row = []
-                for col in range(self.TETRIS_COLS):
-                    columns_of_row.append(Color("BLACK"))
-                empty_rows.append(columns_of_row)
-            
-            self.grid.matrix = empty_rows+rows_kept
-
-            self.players[self.current_player_index].addToScore(len(rows_to_delete)*10)
-        
         self.displayPlayerScore()
         
         if self.last_move == "down":
             self._handle_move_down()
+    
+    def _remove_and_add_rows(self, rows_to_delete):
+        rows_kept= []
+        for row in range(self.TETRIS_ROWS):
+            if row not in rows_to_delete:
+                rows_kept.append(self.grid.return_grid()[row])
+        
+        empty_rows = []
+        new_row = [self.color_pieces["EMPTY"] for _ in range(self.TETRIS_COLS)]
+        for _ in range(len(rows_to_delete)):
+            empty_rows.append(new_row)
+        
+        self.grid.matrix = empty_rows+rows_kept
+    
         
     def _handle_move_down(self):
         '''
         Increase the index of current_player_index if the current player's game is finished
         '''
         if self.addNewPieces() == False or self._check_score_complete():
-                self.current_player_index += 1
-                if(self.current_player_index < len(self.players)):
-                    self.grid = Grid(self.TETRIS_ROWS, self.TETRIS_COLS)
-                    self.populateInitialGrid()
-                else:
-                    self.endGame()
+            self.current_player_index += 1
+            if(self.current_player_index < len(self.players)):
+                self.grid = Grid(self.TETRIS_ROWS, self.TETRIS_COLS)
+                self.populateInitialGrid()
+            else:
+                self.endGame()
     
     def _rotate(self):
         '''
         Rotate the piece when "w" is pressed
         '''
         rotated_piece = list(zip(*self.current_piece[::-1]))
-        new_start_col = (self.TETRIS_COLS - len(rotated_piece[0])) // 2
+        
+        center_col = len(self.current_piece[0]) // 2
+        new_start_col = self.current_piece_start_col + center_col - len(rotated_piece[0]) // 2
 
         #temporary board to check for collision for new piece
         temp_grid = copy.deepcopy(self.grid)
@@ -180,14 +183,14 @@ class Tetris(Game):
         for row in range(len(self.current_piece)):
             for col in range(len(self.current_piece[row])):
                 if self.current_piece[row][col] == 1:
-                    temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = Color("BLACK")
+                    temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = self.color_pieces["EMPTY"]
         
         #if there is not collision, apply change to the piece
         if (not self._check_collison(rotated_piece, temp_grid, self.current_piece_start_row, new_start_col)):
             for row in range(len(rotated_piece)):
                 for col in range(len(rotated_piece[row])):
                     if rotated_piece[row][col] == 1:
-                        temp_grid.matrix[self.current_piece_start_row + row][new_start_col + col] = Color(self.current_piece_color)
+                        temp_grid.matrix[self.current_piece_start_row + row][new_start_col + col] = self.current_piece_color
             self.grid = temp_grid
 
             self.current_piece = rotated_piece
@@ -204,7 +207,7 @@ class Tetris(Game):
         for row in range(len(self.current_piece)):
             for col in range(len(self.current_piece[row])):
                 if self.current_piece[row][col] == 1:
-                    temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = Color("BLACK")
+                    temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = self.color_pieces["EMPTY"]
                     
         while ((self.current_piece_start_row + 1 <= (self.TETRIS_ROWS - len(self.current_piece))) and (not self._check_collison(self.current_piece, temp_grid, self.current_piece_start_row + 1, self.current_piece_start_col))):
             self.current_piece_start_row += 1
@@ -212,7 +215,7 @@ class Tetris(Game):
         for row in range(len(self.current_piece)):
                 for col in range(len(self.current_piece[row])):
                     if self.current_piece[row][col] == 1:
-                        temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = Color(self.current_piece_color)
+                        temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = self.current_piece_color
         
         self.grid = temp_grid
         self.last_move = "down"
@@ -227,13 +230,13 @@ class Tetris(Game):
         for row in range(len(self.current_piece)):
             for col in range(len(self.current_piece[row])):
                 if self.current_piece[row][col] == 1:
-                    temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = Color("BLACK")
+                    temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = self.color_pieces["EMPTY"]
                     
         if (((self.current_piece_start_col - 1) >= 0) and (not self._check_collison(self.current_piece, temp_grid, self.current_piece_start_row, self.current_piece_start_col - 1))): #??
             for row in range(len(self.current_piece)):
                 for col in range(len(self.current_piece[row])):
                     if self.current_piece[row][col] == 1:
-                        temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col - 1 + col] = Color(self.current_piece_color)
+                        temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col - 1 + col] = self.current_piece_color
             self.grid = temp_grid
             self.current_piece_start_col -= 1
         
@@ -248,13 +251,13 @@ class Tetris(Game):
         for row in range(len(self.current_piece)):
             for col in range(len(self.current_piece[row])):
                 if self.current_piece[row][col] == 1:
-                    temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = Color("BLACK")
+                    temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = self.color_pieces["EMPTY"]
         
         if ((self.current_piece_start_col + 1 <= (self.TETRIS_COLS - len(self.current_piece[0]))) and not self._check_collison(self.current_piece, temp_grid, self.current_piece_start_row, self.current_piece_start_col + 1)): #??
             for row in range(len(self.current_piece)):
                 for col in range(len(self.current_piece[row])):
                     if self.current_piece[row][col] == 1:
-                        temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + 1 + col] = Color(self.current_piece_color)
+                        temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + 1 + col] = self.current_piece_color
             self.grid = temp_grid
             self.current_piece_start_col += 1
         
@@ -278,7 +281,7 @@ class Tetris(Game):
         '''
         for row in range(len(new_piece)):
             for col in range(len(new_piece[row])):
-                if (grid.return_grid()[start_row + row][start_col + col] != Color("BLACK") and new_piece[row][col] == 1):
+                if (grid.return_grid()[start_row + row][start_col + col].getPieceType() != Color.BLACK and new_piece[row][col] == 1):
                     return True
         return False
     
@@ -286,34 +289,28 @@ class Tetris(Game):
         '''
         Check if the current player has reached a certain score
         '''
-        return self.players[self.current_player_index].score >= self.END_GAME_SCORE
-
-    # def tetris_testing_matrix(self):
-    #     for row in range(self.TETRIS_ROWS):
-    #         for col in range(self.TETRIS_COLS):
-    #             print(("| " + Color(self.grid.matrix[row][col]).value + " |").center(15), end="")
-    #         print("\n ____________________________________________________________________________")
-    #     print("\n")
-    #     print("\n")
+        return self.players[self.current_player_index].getScore() >= self.END_GAME_SCORE
     
     def printGrid(self):
         for r in range(self.TETRIS_ROWS):
             new_row = []
             for c in range(self.TETRIS_COLS):
-                new_row.append(self.grid.matrix[r][c].name)
+                new_row.append(self.grid.matrix[r][c].getPieceStr())
             print(new_row)
 
     def makeLower(self):
-        new_matrix = []
+        '''
+        Translates the Grid of GamePiece objects into the Color strings needed for tkinter. 
+        '''
+        str_matrix = []
 
         for row in range(self.TETRIS_ROWS):
             row_matrix =  []
             for column in range(self.TETRIS_COLS):
-                # print(self.grid.matrix[row][column].name.lower())
-                row_matrix.append(self.grid.matrix[row][column].name.lower())
-            new_matrix.append(row_matrix)
-        # print(new_matrix)
-        return new_matrix
+                row_matrix.append(self.grid.matrix[row][column].getPieceStr())
+            str_matrix.append(row_matrix)
+
+        return str_matrix
     
     def runGame(self):
         self.printInstructions()
