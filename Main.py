@@ -43,7 +43,7 @@ def login() -> None:
     num_players = input()
  
     # Loop through invalid input, this condition might change
-    while(num_players != "2"):
+    while(num_players != "2" and num_players != "1"):
         print('Please select the number of players from the options:')
         _print_options(2)
         num_players = input()
@@ -59,28 +59,29 @@ def login() -> None:
 def display_games(games : list) -> None:
     print("\nAvailable Games")
     for i in range(len(games)):
-        print(f"    {i+1}) {games[i]}")
+        print(f"    {i+1}) {games[i].CLASS_NAME}")
     print("")
 
 # Should return a game object at some point
-def select_game() -> str:
+def select_game(num_games) -> str:
     print("Please enter the number of the game you'd like to play: \n   > ", end = '')
     game = input()
-    print("")
 
+    while (not game.isdigit()) or (int(game) not in range(1,num_games)):
+        print("Please enter the number of the game you'd like to play: \n   > ", end = '')
+        game = input()
+    print("")
     return game
 
 def run():
-    # For now this is an array of str, might make game obj possibly
-    games = ["Tetris", "Bejeweled"] 
+    # If you're adding a new game, put the class name here
+    games = [tetris.Tetris, bejeweled.Bejeweled] 
 
     players = login()
     display_games(games)
-    game_selection = select_game()
-    if(game_selection == "1"):
-        game = tetris.Tetris(players)
-    elif(game_selection == "2"):
-        game = bejeweled.Bejeweled(players)
+    game_selection = select_game(len(games))
+
+    game = games[int(game_selection)-1](players)
 
     game.runGame()
 

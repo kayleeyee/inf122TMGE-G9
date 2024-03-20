@@ -14,12 +14,11 @@ class Grid:
             for column in range(columns):
                 row_matrix.append(GPF.createGamePiece(Color.BLACK)) 
             self.matrix.append(row_matrix)
-    
-    # NOT NEEDED (just access directly using grid.matrix)
+
     def return_grid(self):
         return self.matrix
     
-    # For debugging purposes?
+    # used for debugging
     def display(self) -> None:
         print(self.matrix)
     

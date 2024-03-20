@@ -115,14 +115,15 @@ class LocalVMatchStrategy(MatchStrategy):
             return False
 
         return piece_type == grid.matrix[x][y].getPieceType()
-    
+
+
 class HorizontalMatchStrategy(MatchStrategy):
     def match(self, grid : Grid, coords : list[Coordinate]) -> list[Coordinate]:
         start_x = coords[0].x
         end_x = coords[1].x
         end_y = coords[1].y
         
-        rows_to_delete = []
+        matches = []
         
         for row in range(start_x, end_x):
             row_all_color = True
@@ -131,5 +132,26 @@ class HorizontalMatchStrategy(MatchStrategy):
                     row_all_color = False
                     break   
             if row_all_color:
-                rows_to_delete.append(Coordinate(row, 0))
-        return rows_to_delete
+                matches.append(Coordinate(row, 0))
+                
+        return matches
+    
+
+class VerticalMatchStrategy(MatchStrategy):
+    def match(self, grid : Grid, coords : list[Coordinate]) -> list[Coordinate]:
+        '''
+        Checks if a whole column contains GridPieces that are not Color.BLACK
+        '''
+        column = coords[0].y
+
+        matches = []
+
+        for row in range(grid.getRows()):
+            if grid.matrix[row][column].getPieceType() != Color.BLACK:
+                matches.append(Coordinate(row, column))
+
+        # if there is not a GamePiece in all of the given column
+        if len(matches) < grid.getCols():
+            matches = []
+        
+        return matches

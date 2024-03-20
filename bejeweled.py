@@ -12,6 +12,7 @@ from collections import namedtuple
 Coordinate = namedtuple('Coordinate', ['x', 'y'])
 
 class Bejeweled(Game) :
+    CLASS_NAME = "Bejeweled"
     BEJEWELED_HORIZONAL_MATCH = MS.LocalHMatchStrategy()
     BEJEWELED_VERTICAL_MATCH = MS.LocalVMatchStrategy()
     BEJEWELED_ROWS = 8
@@ -31,8 +32,17 @@ class Bejeweled(Game) :
         self._clicked_gems_coordinates = []
         self._gui = None
 
+    def className(self):
+        '''
+        Returns the name of the Game.
+        '''
+        return "Bejeweled"
+
 
     def runGame(self):
+        '''
+        Sets up the initial Bejeweled game board, prints instructions on how to play, initializes the GUI
+        '''
         self.populateInitialGrid()
         self.printInstructions()
         self._gui = BejeweledGridGUI(self.makeLower(self.grid.matrix), self)
@@ -67,7 +77,9 @@ class Bejeweled(Game) :
 
 
     def addNewPieces(self):
-        # checks every GamePiece in the Grid, if the grid square is "empty" (Color is Color.BLACK), fill it with a new GamePiece
+        '''
+        checks every GamePiece in the Grid, if the grid square is "empty" (Color is Color.BLACK), fill it with a new GamePiece
+        '''
         for i in range(self.BEJEWELED_ROWS):
             for j in range(self.BEJEWELED_COLS):
                 if self.grid.matrix[i][j].getPieceType() == Color.BLACK:
@@ -79,6 +91,9 @@ class Bejeweled(Game) :
 
 
     def processUserInput(self, user_input):
+        '''
+        Takes in the coordinates of the grid square that was clicked, swaps the gems, checks for matches, displays the player’s score, and checks if the game is over
+        '''
         # Extra error check
         if type(user_input) == tuple:
             if Coordinate(user_input[0], user_input[1]) not in self._clicked_gems_coordinates and len(self._clicked_gems_coordinates) < 2:
@@ -308,6 +323,9 @@ class Bejeweled(Game) :
 
 
     def _printGrid(self):
+        '''
+        Prints the colors as strings in the matrix
+        '''
         for r in range(self.BEJEWELED_ROWS):
             new_row = []
             for c in range(self.BEJEWELED_COLS):

@@ -9,21 +9,10 @@ class Game(ABC):
     for each TMG to implement their own varying game logic. 
     '''        
 
+    
     @abstractmethod
     def runGame(self):
         pass
-        # '''
-        # This is the template method for all TMGs. It outlines the general game loop
-        # that each TMG should follow.
-        # '''
-        # self.populateInitialGrid()
-        # self.printInstructions()
-        # while(not self.endGame()):
-        #     #user_input = self.takeUserInput()
-        #     self.processUserInput()
-        #     self.checkMatch() # update score if necessary inside this method
-        #     self.displayPlayerScore()
-        #     # update display ~ updated within various functions too?
     
     @abstractmethod
     def printInstructions(self):
@@ -52,7 +41,6 @@ class Game(ABC):
     @abstractmethod
     def checkMatch(self):
         pass
-
 
     
     

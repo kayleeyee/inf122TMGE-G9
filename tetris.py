@@ -14,6 +14,7 @@ from collections import namedtuple
 Coordinate = namedtuple('Coordinate', ['x', 'y'])
 
 class Tetris(Game):
+    CLASS_NAME = "Tetris"
     pieces = {
     "I": [[1, 1, 1, 1]],
     "L": [[1, 0, 0],
@@ -42,7 +43,7 @@ class Tetris(Game):
     }
     
     TETRIS_HORIZONTAL_MATCH = MS.HorizontalMatchStrategy()
-    GAME_NAME = 'Tetris'
+    
     TETRIS_ROWS = 20
     TETRIS_COLS = 10
     
@@ -66,6 +67,7 @@ class Tetris(Game):
         self.current_piece_start_col = 0
         
         self.current_player_index = 0
+        
     
     def printInstructions(self):
         '''
@@ -101,7 +103,6 @@ class Tetris(Game):
                 for col in range(len(self.current_piece[row])):
                     if self.current_piece[row][col] == 1:           
                         self.grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = self.current_piece_color
-            # self.tetris_testing_matrix()
                         
             #This is to keep track of the last column MIGHT CHANGE
             self.last_rotation_col = self.current_piece_start_col
@@ -125,7 +126,11 @@ class Tetris(Game):
         '''
         Check when to end game. Game is done when player's index is over the number of players
         '''
-        #self.gui.window.destroy()
+        print("CONGRATS ON REACHING ENDGAME!!!")
+        print("HERE IS THE SCOREBOARD: ")
+        for player in self.players:
+            print(player.getName(), ": ", player.getScore())
+
         exit()
     
     def checkMatch(self):
@@ -177,9 +182,7 @@ class Tetris(Game):
         '''
         Rotate the piece when "w" is pressed
         '''
-        rotated_piece = list(zip(*self.current_piece[::-1]))
-        #print(rotated_piece)
-        
+        rotated_piece = list(zip(*self.current_piece[::-1]))    
         center_col = len(self.current_piece[0]) // 2
         new_start_col = self.current_piece_start_col + center_col - len(rotated_piece[0]) // 2
 
@@ -193,18 +196,11 @@ class Tetris(Game):
         #temporary board to check for collision for new piece
         temp_grid = copy.deepcopy(self.grid)
 
-        
-
         for row in range(len(self.current_piece)):
             for col in range(len(self.current_piece[row])):
                 if self.current_piece[row][col] == 1:
                     temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = self.color_pieces["EMPTY"]
                     
-                        
-                    
-        
-        
-    
         #if there is not collision, apply change to the piece
         if (not self._check_collison(rotated_piece, temp_grid, self.current_piece_start_row, new_start_col)):
             for row in range(len(rotated_piece)):
@@ -343,22 +339,9 @@ class Tetris(Game):
             str_matrix.append(row_matrix)
 
         return str_matrix
-    
-    # def tetris_testing_matrix(self):
-    #     for row in range(self.TETRIS_ROWS):
-    #         for col in range(self.TETRIS_COLS):
-    #             print(("| " + self.grid.matrix[row][col].getPieceStr() + " |").center(15), end="")
-    #         print("\n ____________________________________________________________________________")
-    #     print("\n")
-    #     print("\n")
-    
+
     def runGame(self):
         self.printInstructions()
         self.populateInitialGrid()
         self.gui = TetrisGridGUI(self.makeLower(), self)
         self.gui.run()
-        
-# if __name__ == "__main__":
-#     players = [Player('p1'), Player('p2')]
-#     tet = Tetris(players)
-#     tet.runGame()
