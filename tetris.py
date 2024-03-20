@@ -73,7 +73,7 @@ class Tetris(Game):
         '''
         Prints instructions on how to play Tetris to the player's terminal
         '''
-        instructions = 'Welcome to Bejeweled!\nTo play this game, use\nw - rotate\na - move left\nd - move right\ns - move down\nThis is a turn-based Tetris so Tetris piece do not fall down every second\nPiece can be moved left/right and rotate for as many times as Player wants\nMove down will move the piece all the way down and settle the location for the Piece'
+        instructions = 'Welcome to Bejeweled!\nTo play this game, use\nw - rotate\na - move left\nd - move right\ns - move down\nThis is a turn-based Tetris game so Tetris piece is not falling down every second\nPiece can be rotated and moved left/right for any amount of time before moved down\nThis is a turn-based Tetris so Tetris piece do not fall down every second\nPiece can be moved left/right and rotate for as many times as Player wants\nMove down action will move the piece all the way down and settle the location for the Piece'
         print(instructions)
     
     def displayPlayerScore(self):
