@@ -67,7 +67,7 @@ def select_game(num_games) -> str:
     print("Please enter the number of the game you'd like to play: \n   > ", end = '')
     game = input()
 
-    while (not game.isdigit()) or (int(game) not in range(1,num_games)):
+    while (not game.isdigit()) or (int(game) not in range(1,num_games+1)):
         print("Please enter the number of the game you'd like to play: \n   > ", end = '')
         game = input()
     print("")
