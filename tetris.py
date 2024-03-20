@@ -52,6 +52,9 @@ class Tetris(Game):
     piece_keys = list(pieces.keys())
     last_move = None
 
+    last_rotation_col = None
+
+
     def __init__(self, players) -> None:
         self.grid = Grid(self.TETRIS_ROWS, self.TETRIS_COLS)
         
@@ -68,7 +71,7 @@ class Tetris(Game):
         '''
         Prints instructions on how to play Tetris to the player's terminal
         '''
-        instructions = 'Welcome to Bejeweled!\nTo play this game, use "w/a/s/d" to rotate/move left/move right/move down\nMove down will move the piece all the way down'
+        instructions = 'Welcome to Tetris!\nTo play this game, use "w/a/s/d" to rotate/move left/move right/move down\nMove down will move the piece all the way down'
         print(instructions)
     
     def displayPlayerScore(self):
@@ -99,6 +102,9 @@ class Tetris(Game):
                     if self.current_piece[row][col] == 1:           
                         self.grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = self.current_piece_color
             # self.tetris_testing_matrix()
+                        
+            #This is to keep track of the last column MIGHT CHANGE
+            self.last_rotation_col = self.current_piece_start_col
             return True 
 
         return False
@@ -119,8 +125,8 @@ class Tetris(Game):
         '''
         Check when to end game. Game is done when player's index is over the number of players
         '''
-        self.gui.window.destroy()
-        #exit()
+        #self.gui.window.destroy()
+        exit()
     
     def checkMatch(self):
         '''
@@ -172,24 +178,40 @@ class Tetris(Game):
         Rotate the piece when "w" is pressed
         '''
         rotated_piece = list(zip(*self.current_piece[::-1]))
+        #print(rotated_piece)
         
         center_col = len(self.current_piece[0]) // 2
         new_start_col = self.current_piece_start_col + center_col - len(rotated_piece[0]) // 2
 
+        print("NEW START COL BEFORE ANY MOVEMENT: ", new_start_col)
+
+        if(new_start_col == 8):
+            new_start_col = 7
+        elif (self.last_rotation_col == 9):
+            new_start_col = 6
+
         #temporary board to check for collision for new piece
         temp_grid = copy.deepcopy(self.grid)
+
+        
 
         for row in range(len(self.current_piece)):
             for col in range(len(self.current_piece[row])):
                 if self.current_piece[row][col] == 1:
                     temp_grid.matrix[self.current_piece_start_row + row][self.current_piece_start_col + col] = self.color_pieces["EMPTY"]
+                    
+                        
+                    
         
+        
+    
         #if there is not collision, apply change to the piece
         if (not self._check_collison(rotated_piece, temp_grid, self.current_piece_start_row, new_start_col)):
             for row in range(len(rotated_piece)):
                 for col in range(len(rotated_piece[row])):
                     if rotated_piece[row][col] == 1:
                         temp_grid.matrix[self.current_piece_start_row + row][new_start_col + col] = self.current_piece_color
+                        
             self.grid = temp_grid
 
             self.current_piece = rotated_piece
@@ -242,6 +264,10 @@ class Tetris(Game):
         
         self.last_move = "left"
 
+        #for the rotation:
+        self.last_rotation_col: self.current_piece_start_col
+
+
     def _move_right(self):
         '''
         Move the piece to the right by one column when "d" is pressed
@@ -263,6 +289,9 @@ class Tetris(Game):
         
         self.last_move = "right"
 
+        #for the rotation
+        self.last_rotation_col = self.current_piece_start_col
+
     def _choose_new_pieces(self):
         '''
         Randomize piece choice for addNewPieces method
@@ -281,8 +310,11 @@ class Tetris(Game):
         '''
         for row in range(len(new_piece)):
             for col in range(len(new_piece[row])):
-                if (grid.return_grid()[start_row + row][start_col + col].getPieceType() != Color.BLACK and new_piece[row][col] == 1):
-                    return True
+                try:
+                    if (grid.return_grid()[start_row + row][start_col + col].getPieceType() != Color.BLACK and new_piece[row][col] == 1):
+                        return True
+                except:
+                    return False
         return False
     
     def _check_score_complete(self) -> bool:
