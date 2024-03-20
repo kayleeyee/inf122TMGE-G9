@@ -18,7 +18,6 @@ class TetrisGridGUI(GridGUI):
         
     def onKeyPress(self, event):
         key = event.keysym
-        print(key + " key pressed")
         self.tetris_obj.processUserInput(key)
                 
         self.matrix = self.tetris_obj.makeLower()

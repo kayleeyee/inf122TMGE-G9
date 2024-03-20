@@ -73,7 +73,7 @@ class Tetris(Game):
         '''
         Prints instructions on how to play Tetris to the player's terminal
         '''
-        instructions = 'Welcome to Tetris!\nTo play this game, use "w/a/s/d" to rotate/move left/move right/move down\nMove down will move the piece all the way down'
+        instructions = 'Welcome to Bejeweled!\nTo play this game, use "w/a/s/d" to rotate/move left/move right/move down\nThis is a turn-based Tetris so Tetris piece do not fall down every second\nPiece can be moved left/right and rotate for as many times as Player wants\nMove down will move the piece all the way down and settle the location for the Piece'
         print(instructions)
     
     def displayPlayerScore(self):
@@ -185,8 +185,6 @@ class Tetris(Game):
         rotated_piece = list(zip(*self.current_piece[::-1]))    
         center_col = len(self.current_piece[0]) // 2
         new_start_col = self.current_piece_start_col + center_col - len(rotated_piece[0]) // 2
-
-        print("NEW START COL BEFORE ANY MOVEMENT: ", new_start_col)
 
         if(new_start_col == 8):
             new_start_col = 7
