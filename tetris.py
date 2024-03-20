@@ -73,7 +73,7 @@ class Tetris(Game):
         '''
         Prints instructions on how to play Tetris to the player's terminal
         '''
-        instructions = 'Welcome to Tetris!\nTo play this game, use "w/a/s/d" to rotate/move left/move right/move down\nMove down will move the piece all the way down'
+        instructions = 'Welcome to Tetris!\nTo play this game, use "w/a/s/d" to rotate/move left/move right/move down\nThis is a turn-based Tetris game so Tetris piece is not falling down every second\nPiece can be rotated and moved left/right for any amount of time before moved down\nMove down action will move the piece all the way down'
         print(instructions)
     
     def displayPlayerScore(self):

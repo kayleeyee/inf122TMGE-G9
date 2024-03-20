@@ -31,13 +31,7 @@ class Bejeweled(Game) :
         self._colors = list(Color)[:self.BEJEWELED_COLORS] 
         self._clicked_gems_coordinates = []
         self._gui = None
-
-    def className(self):
-        '''
-        Returns the name of the Game.
-        '''
-        return "Bejeweled"
-
+        
 
     def runGame(self):
         '''
